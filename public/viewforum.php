@@ -99,7 +99,7 @@
 		echo "<h2>$requestedForum</h2>";
 		echo "$thisForumDescription<br/>";
 
-		if( $permissions >= \RA\Permissions::Registered )
+		if( $permissions >= \RA\Permissions::Verified )
 			echo "<a href='createtopic.php?f=$thisForumID'><div class='rightlink'>[Create New Topic]</div></a>";
 		
 		echo "<table><tbody>";
@@ -168,7 +168,7 @@
 		
 		echo "<br/>";
 		
-		if( $permissions >= \RA\Permissions::Registered )
+		if( $permissions >= \RA\Permissions::Verified )
 		{
 			echo "<a href='createtopic.php?f=$thisForumID'><div class='rightlink'>[Create New Topic]</div></a>";
 		}

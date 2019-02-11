@@ -185,7 +185,7 @@ switch( $requestType )
 		break;
 	
 	case "getfriendlist":
-		if( !RA_ReadCookieCredentials( $user, $points, $truePoints, $unreadMessageCount, $permissions, \RA\Permissions::Registered ) )
+		if( !RA_ReadCookieCredentials( $user, $points, $truePoints, $unreadMessageCount, $permissions, \RA\Permissions::Verified ) )
 		{
 			DoRequestError( "credentials failed!" );
 			exit;
@@ -196,7 +196,7 @@ switch( $requestType )
 		break;
 		
 	case "uploaduserpic":
-		if( !RA_ReadCookieCredentials( $user, $points, $truePoints, $unreadMessageCount, $permissions, \RA\Permissions::Registered ) )
+		if( !RA_ReadCookieCredentials( $user, $points, $truePoints, $unreadMessageCount, $permissions, \RA\Permissions::Verified ) )
 		{
 			DoRequestError( "credentials failed!" );
 			exit;

@@ -653,7 +653,7 @@ function RenderTitleBar( $user, $points, $truePoints, $unreadMessageCount, $erro
         echo ")";
         echo "</a>";
 
-        if( $permissions >= 3 ) // 3 == Developer
+        if( $permissions >= \RA\Permissions::Developer ) // 3 == Moderator
         {
             $openTickets = countOpenTicketsByDev( $user );
             if( $openTickets > 0 )
@@ -689,17 +689,6 @@ function RenderToolbar( $user, $permissions = 0 )
     }
 
     echo "<li><a href='/feed.php?g=1'>Global Feed</a></li>";
-
-    //	SU:
-    if( $permissions >= 2 )
-    {
-        echo "<li><a href='/submitnews.php'>Submit News Article</a></li>";
-    }
-    //	Admin:
-    if( $permissions >= 4 )
-    {
-        echo "<li><a href='/admin.php'>Admin Tools</a></li>";
-    }
 
     echo "<li><a href='https://docs.retroachievements.org/'>Documentation</a></li>";
     echo "<li><a href='https://docs.retroachievements.org/FAQ/'>- FAQ</a></li>";
@@ -809,9 +798,9 @@ function RenderToolbar( $user, $permissions = 0 )
     //echo "</ul>";
     echo "</li>";
 
-    if( $permissions >= 3 )
+    if( $permissions >= \RA\Permissions::Developer )
     {
-        echo "<li><a href='#'>Developers</a>";
+        echo "<li><a href='#'>Develop</a>";
         echo "<ul>";
         echo "<li><a href='/developerstats.php'>Developer Stats</a></li>";
         echo "<li><a href='/achievementinspector.php'>Ach. Inspector</a></li>";
@@ -819,6 +808,20 @@ function RenderToolbar( $user, $permissions = 0 )
         echo "<li><a href='/ticketmanager.php?f=1'>Most Reported Games</a></li>";
         echo "<li><a href='/viewforum.php?f=0'>Invalid Forum Posts</a></li>";
         echo "<li><a href='/viewtopic.php?t=394'>Official To-Do List</a></li>";
+        echo "</ul>";
+
+        echo "</li>";
+    }
+
+    if( $permissions >= \RA\Permissions::Developer )
+    {
+        echo "<li><a href='#'>Administrate</a>";
+        echo "<ul>";
+        echo "<li><a href='/admin.php'>Administration</a></li>";
+        if( $permissions >= \RA\Permissions::Moderator )
+        {
+            echo "<li><a href='/submitnews.php'>Submit News Article</a></li>";
+        }
         echo "</ul>";
 
         echo "</li>";
@@ -836,11 +839,6 @@ function RenderToolbar( $user, $permissions = 0 )
         echo "</ul>";
         echo "</li>";
     }
-    //echo "<li><a href='/news.aspx'>Useful Links</a>";
-    //echo "<ul>";
-    //echo "<li><a href='/gopro.aspx' title='Upgrade to Pro account'>Pro account</a></li>";
-    //echo "</ul>";
-    //echo "</li>";
     echo "</ul>";
 
     echo "<form action='/searchresults.php' method='get'>";

@@ -70,7 +70,7 @@ RenderDocType( TRUE );
 <body>
 
     <?php
-    if( $permissions >= 2 )
+    if( $permissions >= \RA\Permissions::Developer )
     {
         ?>
         <script>
@@ -171,7 +171,7 @@ RenderDocType( TRUE );
 
             echo "Won by <b>$numWinners</b> of <b>$numPossibleWinners</b> possible players ($recentWinnersPct%)";
 
-            if( isset( $user ) && $permissions >= 1 )
+            if( isset( $user ) && $permissions >= \RA\Permissions::Verified )
             {
                 echo "<br>";
                 $countTickets = countOpenTicketsByAchievement( $achievementID );
@@ -181,7 +181,7 @@ RenderDocType( TRUE );
             }
             echo "<br/><br/><br/><br/>";
 
-            if( isset( $user ) && $permissions >= 2 )
+            if( isset( $user ) && $permissions >= \RA\Permissions::Developer )
             {
                 echo "<div class='devbox'>";
                 echo "<span onclick=\"$('#devboxcontent').toggle(500); return false;\">Dev (Click to show):</span><br/>";

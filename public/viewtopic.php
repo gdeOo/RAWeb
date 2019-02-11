@@ -94,7 +94,7 @@
 
         echo "<h2 class='longheader'>$thisTopicTitle</h2>";
 
-        //if( isset( $user ) && $permissions >= 1 )
+        //if( isset( $user ) && $permissions >= \RA\Permissions::Verified )
         if( isset( $user ) && ( $thisTopicAuthor == $user || $permissions >= \RA\Permissions::Admin ) )
         {
             echo "<div class='devbox'>";
@@ -146,7 +146,7 @@
             // TBD: Report offensive content
             // TBD: Subscribe to this topic
             // TBD: Make top-post wiki
-            // if( ( $thisTopicAuthor == $user ) || $permissions >= 3 )
+            // if( ( $thisTopicAuthor == $user ) || $permissions >= \RA\Permissions::Developer )
             // {
                 // echo "<li>Delete Topic!</li>";
                 // echo "<form action='requestmodifytopic.php' >";
@@ -349,8 +349,8 @@
 
             RenderPHPBBIcons();
 
-            $defaultMessage = ( $permissions >= 1 ) ? "" : "** Your account appears to be locked. Did you confirm your email? **";
-            $inputEnabled = ( $permissions >= 1 ) ? "" : "disabled";
+            $defaultMessage = ( $permissions >= \RA\Permissions::Verified ) ? "" : "** Your account appears to be locked. Did you confirm your email? **";
+            $inputEnabled = ( $permissions >= \RA\Permissions::Verified ) ? "" : "disabled";
             
             echo "<form action='requestsubmittopiccomment.php' method='post'>";
             echo "<textarea id='commentTextarea' class='fullwidth forum' rows='10' cols='63' $inputEnabled maxlength='60000' name='p'>$defaultMessage</textarea><br/><br/>";

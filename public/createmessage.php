@@ -4,7 +4,7 @@
 	$user = RA_ReadCookie( 'RA_User' );
 	$cookieRaw = RA_ReadCookie( 'RA_Cookie' );
 	
-	if( RA_ReadCookieCredentials( $user, $points, $truePoints, $unreadMessageCount, $permissions, \RA\Permissions::Registered ) )
+	if( RA_ReadCookieCredentials( $user, $points, $truePoints, $unreadMessageCount, $permissions, \RA\Permissions::Verified ) )
 	{
 		if( getAccountDetails( $user, $userDetails ) == FALSE )
 		{

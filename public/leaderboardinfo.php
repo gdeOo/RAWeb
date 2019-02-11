@@ -83,7 +83,7 @@ RenderDocType( TRUE );
                 echo "<br/>";
                 echo "<br/>";
 
-                if( isset( $user ) && $permissions >= 3 )
+                if( isset( $user ) && $permissions >= \RA\Permissions::Developer )
                 {
                     echo "<div class='devbox'>";
                     echo "<span onclick=\"$('#devboxcontent').toggle(500); return false;\">Dev (Click to show):</span><br/>";

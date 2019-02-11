@@ -62,7 +62,7 @@ switch( $requestType )
     case "submitlbentry":
     case "unlocks":
     case "uploadachievement":
-        $credentialsOK = $validLogin && ( $permissions >= \RA\Permissions::Registered );
+        $credentialsOK = $validLogin && ( $permissions >= \RA\Permissions::Verified );
         break;
 
     //	Developer status required:

@@ -444,7 +444,6 @@ foreach( $arrayToUse as $dayInfo )
 
                 if( isset( $user ) && $permissions >= \RA\Permissions::Root )
                 {
-                    //  Me only
                     echo "<form method='post' action='/requestupdateuser.php' enctype='multipart/form-data'>";
                     echo "<input type='hidden' name='p' value='2' />";
                     echo "<input type='hidden' name='t' value='$userPage' />";
@@ -454,25 +453,22 @@ foreach( $arrayToUse as $dayInfo )
                     echo "</form>";
                 }
 
-                if( isset( $user ) && $permissions >= \RA\Permissions::Admin )
-                {
-                    echo "<form method='post' action='/requestscorerecalculation.php' enctype='multipart/form-data'>";
-                    echo "<input TYPE='hidden' NAME='u' VALUE='$userPage' />";
-                    echo "&nbsp;<input type='submit' style='float: right;' value='Recalc Score Now' /></br></br>";
-                    echo "<div style='clear:all;'></div>";
-                    echo "</form>";
+                echo "<form method='post' action='/requestscorerecalculation.php' enctype='multipart/form-data'>";
+                echo "<input TYPE='hidden' NAME='u' VALUE='$userPage' />";
+                echo "&nbsp;<input type='submit' style='float: right;' value='Recalc Score Now' /></br></br>";
+                echo "<div style='clear:all;'></div>";
+                echo "</form>";
 
-                    //$userIsUntracked
-                    echo ($userIsUntracked == 1) ? "<b>Untracked User!</b>&nbsp;" : "Tracked User.&nbsp;";
-                    $newValue = $userIsUntracked ? 0 : 1;
-                    echo "<form method='post' action='/requestupdateuser.php' enctype='multipart/form-data'>";
-                    echo "<input TYPE='hidden' NAME='p' VALUE='3' />";
-                    echo "<input TYPE='hidden' NAME='t' VALUE='$userPage' />";
-                    echo "<input TYPE='hidden' NAME='v' VALUE='$newValue' />";
-                    echo "&nbsp;<input type='submit' style='float: right;' value='Toggle Tracked Status' /></br></br>";
-                    echo "<div style='clear:all;'></div>";
-                    echo "</form>";
-                }
+                //$userIsUntracked
+                echo ($userIsUntracked == 1) ? "<b>Untracked User!</b>&nbsp;" : "Tracked User.&nbsp;";
+                $newValue = $userIsUntracked ? 0 : 1;
+                echo "<form method='post' action='/requestupdateuser.php' enctype='multipart/form-data'>";
+                echo "<input TYPE='hidden' NAME='p' VALUE='3' />";
+                echo "<input TYPE='hidden' NAME='t' VALUE='$userPage' />";
+                echo "<input TYPE='hidden' NAME='v' VALUE='$newValue' />";
+                echo "&nbsp;<input type='submit' style='float: right;' value='Toggle Tracked Status' /></br></br>";
+                echo "<div style='clear:all;'></div>";
+                echo "</form>";
 
                 echo "</div>"; //devboxcontent
 

@@ -75,7 +75,7 @@ RenderDocType();
             else
                 echo "<a href='/userList.php?s=$sortBy&p=0'>Unregistered</a>";
 
-            for( $i = \RA\Permissions::Registered; $i <= \RA\Permissions::Admin; $i++ )
+            for($i = \RA\Permissions::Verified; $i <= \RA\Permissions::Admin; $i++ )
             {
                 echo " | ";
 

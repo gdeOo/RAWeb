@@ -387,7 +387,7 @@
 		echo "<h3>Account Privileges</h3>";
 		echo "<table><tbody>";
 		
-		if( $permissions >= 1 )
+		if( $permissions >= \RA\Permissions::Verified )
 		{
 			$userMottoString = isset( $userMotto ) ? $userMotto : "";
 			echo "<tr>";
@@ -413,7 +413,7 @@
 			echo "</tr>";
 		}
 		
-		if( $permissions >= 1 )
+		if( $permissions >= \RA\Permissions::Verified )
 		{
 			echo "<tr><td>Twitch.tv streamkey:</td><td><input size='60' readonly type='text' value='live_46798798_5tO2CCgggTMoi5458BLKUADECNpOrq' /></td></tr>";
 		}

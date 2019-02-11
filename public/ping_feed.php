@@ -1,6 +1,12 @@
 <?php
 // reference the file containing the Chat class
 require_once __DIR__ . '/../lib/bootstrap.php' ;
+
+if(getenv('APP_ENV') === 'local') {
+    echo '<div>' . getenv('APP_ENV') . '</div>';
+    return;
+}
+
 // retrieve the operation to be performed
 $mode = $_POST['mode'];
  

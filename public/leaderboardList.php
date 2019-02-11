@@ -141,7 +141,7 @@ function onUpdateComplete( data )
 			echo "</div>";
 		}
 		
-		if( isset( $user ) && $permissions >= 3 )
+		if( isset( $user ) && $permissions >= \RA\Permissions::Developer )
 		{
 			$numGames = getGamesList( 0, $gamesList );
 			
@@ -181,7 +181,7 @@ function onUpdateComplete( data )
 			echo "</div>";
 		}
 		
-		if( isset( $gameData ) && isset( $user ) && $permissions >= 3 )
+		if( isset( $gameData ) && isset( $user ) && $permissions >= \RA\Permissions::Developer )
 			echo "<div id='warning'>Status: OK!</div>";
 		
 		if( !isset( $gameData ) )
@@ -229,7 +229,7 @@ function onUpdateComplete( data )
 		$sort6 = ($sortBy==6) ? 16 : 6;
 		$sort7 = ($sortBy==7) ? 17 : 7;
 		
-		if( isset( $gameData ) && isset( $user ) && $permissions >= 3 )
+		if( isset( $gameData ) && isset( $user ) && $permissions >= \RA\Permissions::Developer )
 		{
 			echo "<th>ID</th>";
 			echo "<th>Title/Description</th>";
@@ -273,7 +273,7 @@ function onUpdateComplete( data )
 			else
 				echo "<tr class='alt'>";
 			
-			if( isset( $gameData ) && isset( $user ) && $permissions >= 3 )
+			if( isset( $gameData ) && isset( $user ) && $permissions >= \RA\Permissions::Developer )
 			{
 				echo "<td>";
 				echo "<a href='/leaderboardinfo.php?i=$lbID'>$lbID</a>";
@@ -427,7 +427,7 @@ function onUpdateComplete( data )
 		}
 		
 		//	hack:
-		if( isset( $gameData ) && isset( $user ) && $permissions >= 3 )
+		if( isset( $gameData ) && isset( $user ) && $permissions >= \RA\Permissions::Developer )
 			$listCount /= 2;
 		
 		echo "</tbody></table>";
@@ -457,7 +457,7 @@ function onUpdateComplete( data )
 	
 	<?php
 	echo "<div class='right'>";
-		if( isset( $gameData ) && isset( $user ) && $permissions >= 3 )
+		if( isset( $gameData ) && isset( $user ) && $permissions >= \RA\Permissions::Developer )
 		{
 			RenderCodeNotes( $codeNotes );
 		}
