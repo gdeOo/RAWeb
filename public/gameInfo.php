@@ -40,8 +40,8 @@ $numAchievements = getGameMetadataByFlags( $gameID, $user, $achievementData, $ga
 
 if( !isset($gameData) )
 {
-	echo "Invalid game ID!";
-	exit;
+    echo "Invalid game ID!";
+    exit;
 }
 
 $gameAlts = GetGameAlternatives( $gameID );
@@ -63,7 +63,7 @@ $consoleID = $gameData[ 'ConsoleID' ];
 $forumTopicID = $gameData[ 'ForumTopicID' ];
 $richPresenceData = $gameData[ 'RichPresencePatch' ];
 
-//	Get the top ten players at this game:
+// Get the top ten players at this game:
 $gameTopAchievers = getGameTopAchievers( $gameID, 0, 10, $user );
 
 $totalUniquePlayers = getTotalUniquePlayers( $gameID );
@@ -72,7 +72,7 @@ if( $numDistinctPlayersCasual < $totalUniquePlayers )
 if( $numDistinctPlayersHardcore < $totalUniquePlayers )
     $numDistinctPlayersHardcore = $totalUniquePlayers;
 
-$achDist = getAchievementDistribution( $gameID, 0 ); //	for now, only retrieve casual!
+$achDist = getAchievementDistribution( $gameID, 0 ); // for now, only retrieve casual!
 for( $i = 1; $i <= $numAchievements; $i++ )
 {
     if( !array_key_exists( $i, $achDist ) )
@@ -114,7 +114,7 @@ else if( $consoleID == 6 ) // gbc
     $screenshotHeight = 180;
 }
 
-//	Quickly calculate earned/potential
+// Quickly calculate earned/potential
 $totalEarnedCasual = 0;
 $totalEarnedHardcore = 0;
 $numEarnedCasual = 0;
@@ -329,17 +329,17 @@ $numGridlines = $numAchievements;
             });
         }
 
-        //	Onload:
+        // Onload:
         $(function () {
 
-            //	Add these handlers onload, they don't exist yet
+            // Add these handlers onload, they don't exist yet
             $('.starimg').hover(
                     function () {
-                        //	On hover
+                        // On hover
 
                         if ($(this).parent().is($('#ratingach')))
                         {
-                            //	Ach:
+                            // Ach:
                             var numStars = 0;
                             if ($(this).hasClass('1star'))
                                 numStars = 1;
@@ -355,7 +355,7 @@ $numGridlines = $numAchievements;
                             SetLitStars('#ratingach', numStars);
                         } else
                         {
-                            //	Game:
+                            // Game:
                             var numStars = 0;
                             if ($(this).hasClass('1star'))
                                 numStars = 1;
@@ -372,16 +372,16 @@ $numGridlines = $numAchievements;
                         }
                     },
                     function () {
-                        //	On leave
+                        // On leave
                         //GetRating( <?php echo $gameID; ?> );
                     });
 
             $('.rating').hover(
                     function () {
-                        //	On hover
+                        // On hover
                     },
                     function () {
-                        //	On leave
+                        // On leave
                         //GetRating( <?php echo $gameID; ?> );
                         if ($(this).is($('#ratingach')))
                             SetLitStars('#ratingach', lastKnownAchRating);
@@ -439,7 +439,7 @@ $numGridlines = $numAchievements;
                     echo " &raquo; <b>$gameTitle</b>";
                 echo "</div>";
 
-                //	Dump all page info:
+                // Dump all page info:
                 $developer = $gameData[ 'Developer' ] != NULL ? $gameData[ 'Developer' ] : "Unknown";
                 $publisher = $gameData[ 'Publisher' ] != NULL ? $gameData[ 'Publisher' ] : "Unknown";
                 $genre = $gameData[ 'Genre' ] != NULL ? $gameData[ 'Genre' ] : "Unknown";
@@ -490,7 +490,7 @@ $numGridlines = $numAchievements;
                 echo "<div style='clear:both;'></div>";
                 echo "</br>";
 
-                if( isset( $user ) && $permissions >= \RA\Permissions::Developer )
+                if( isset( $user ) && $permissions >= \RA\Permissions::JrDeveloper )
                 {
                     echo "<div class='devbox'>";
                     echo "<span onclick=\"$('#devboxcontent').toggle(500); return false;\">Dev (Click to show):</span><br/>";
@@ -502,126 +502,130 @@ $numGridlines = $numAchievements;
                     else
                         echo "<li><a href='/gameInfo.php?ID=$gameID&f=5'>View Unofficial Achievements</a></li>";
 
-                    echo "<li><a href='/achievementinspector.php?g=$gameID'>Manage Achievements</a></li>";
-                    echo "<li><a href='/leaderboardList.php?g=$gameID'>Manage Leaderboards</a></li>";
-
-                    echo "<li><a href='/attemptrename.php?g=$gameID'>Rename Game</a></li>";
-                    echo "<li><a href='/attemptunlink.php?g=$gameID'>Unlink Game</a></li>";
-
-                    if( $numLeaderboards == 0 )
-                        echo "<li><a href='/requestcreatenewlb.php?u=$user&amp;c=$cookie&amp;g=$gameID'>Create First Leaderboard</a></li>";
-                    echo "<li><a href='/request.php?r=recalctrueratio&amp;g=$gameID&amp;b=1'>Recalculate True Ratios</a></li>";
                     echo "<li><a href='/ticketmanager.php?g=$gameID&ampt=1'>View open tickets for this game</a></li>";
                     echo "<li><a href='/codenotes.php?g=$gameID'>Code Notes</a>";
 
-                    echo "</br>";
-
-                    echo "<li>Update title screenshot</li>";
-                    echo "<form method='post' action='/uploadpic.php' enctype='multipart/form-data'>";
-                    echo "<input type='hidden' name='i' value='$gameID' />";
-                    echo "<input type='hidden' name='t' value='GAME_TITLE' />";
-                    echo "<input type='file' name='file' id='file' />";
-                    echo "<input type='submit' name='submit' style='float: right;' value='Submit' />";
-                    echo "</form><br/>";
-
-                    echo "<li>Update ingame screenshot</li>";
-                    echo "<form method='post' action='/uploadpic.php' enctype='multipart/form-data'>";
-                    echo "<input type='hidden' name='i' value='$gameID' />";
-                    echo "<input type='hidden' name='t' value='GAME_INGAME' />";
-                    echo "<input type='file' name='file' id='file' />";
-                    echo "<input type='submit' name='submit' style='float: right;' value='Submit' />";
-                    echo "</form><br/>";
-
-                    echo "<li>Update game icon</li>";
-                    echo "<form method='post' action='/uploadpic.php' enctype='multipart/form-data'>";
-                    echo "<input type='hidden' name='i' value='$gameID' />";
-                    echo "<input type='hidden' name='t' value='GAME_ICON' />";
-                    echo "<input type='file' name='file' id='file' />";
-                    echo "<input type='submit' name='submit' style='float: right;' value='Submit' />";
-                    echo "</form><br/>";
-
-                    echo "<li>Update game boxart</li>";
-                    echo "<form method='post' action='/uploadpic.php' enctype='multipart/form-data'>";
-                    echo "<input type='hidden' name='i' value='$gameID' />";
-                    echo "<input type='hidden' name='t' value='GAME_BOXART' />";
-                    echo "<input type='file' name='file' id='file' />";
-                    echo "<input type='submit' name='submit' style='float: right;' value='Submit' />";
-                    echo "</form><br/>";
-
-                    echo "<li>Update game details:</br>";
-                    echo "<form method='post' action='/submitgamedata.php' enctype='multipart/form-data'>";
-                    echo "<table><tbody>";
-                    echo "<input type='hidden' name='i' value='$gameID' />";
-                    echo "<tr><td>Developer:</td><td style='width:100%'><input type='text' name='d' value='$developer' style='width:100%;'/></td></tr>";
-                    echo "<tr><td>Publisher:</td><td style='width:100%'><input type='text' name='p' value='$publisher' style='width:100%;'/></td></tr>";
-                    echo "<tr><td>Genre:</td><td style='width:100%'><input type='text' name='g' value='$genre' style='width:100%;'/></td></tr>";
-                    echo "<tr><td>First Released:</td><td style='width:100%'><input type='text' name='r' value='$released' style='width:100%;'/></td></tr>";
-                    echo "</tbody></table>";
-                    echo "&nbsp;<input type='submit' style='float: right;' value='Submit' /></br></br>";
-                    echo "<div style='clear:all;'></div>";
-                    echo "</form>";
-                    echo "</li>";
-
-                    if( $permissions >= \RA\Permissions::Admin )
+                    if( $permissions >= \RA\Permissions::Developer )
                     {
+                        echo "<li><a href='/achievementinspector.php?g=$gameID'>Manage Achievements</a></li>";
+                        echo "<li><a href='/leaderboardList.php?g=$gameID'>Manage Leaderboards</a></li>";
+
+                        echo "<li><a href='/attemptrename.php?g=$gameID'>Rename Game</a></li>";
+                        echo "<li><a href='/attemptunlink.php?g=$gameID'>Unlink Game</a></li>";
+
+                        if( $numLeaderboards == 0 )
+                            echo "<li><a href='/requestcreatenewlb.php?u=$user&amp;c=$cookie&amp;g=$gameID'>Create First Leaderboard</a></li>";
+                        echo "<li><a href='/request.php?r=recalctrueratio&amp;g=$gameID&amp;b=1'>Recalculate True Ratios</a></li>";
+
+                        echo "</br>";
+
+                        echo "<li>Update title screenshot</li>";
+                        echo "<form method='post' action='/uploadpic.php' enctype='multipart/form-data'>";
+                        echo "<input type='hidden' name='i' value='$gameID' />";
+                        echo "<input type='hidden' name='t' value='GAME_TITLE' />";
+                        echo "<input type='file' name='file' id='file' />";
+                        echo "<input type='submit' name='submit' style='float: right;' value='Submit' />";
+                        echo "</form><br/>";
+
+                        echo "<li>Update ingame screenshot</li>";
+                        echo "<form method='post' action='/uploadpic.php' enctype='multipart/form-data'>";
+                        echo "<input type='hidden' name='i' value='$gameID' />";
+                        echo "<input type='hidden' name='t' value='GAME_INGAME' />";
+                        echo "<input type='file' name='file' id='file' />";
+                        echo "<input type='submit' name='submit' style='float: right;' value='Submit' />";
+                        echo "</form><br/>";
+
+                        echo "<li>Update game icon</li>";
+                        echo "<form method='post' action='/uploadpic.php' enctype='multipart/form-data'>";
+                        echo "<input type='hidden' name='i' value='$gameID' />";
+                        echo "<input type='hidden' name='t' value='GAME_ICON' />";
+                        echo "<input type='file' name='file' id='file' />";
+                        echo "<input type='submit' name='submit' style='float: right;' value='Submit' />";
+                        echo "</form><br/>";
+
+                        echo "<li>Update game boxart</li>";
+                        echo "<form method='post' action='/uploadpic.php' enctype='multipart/form-data'>";
+                        echo "<input type='hidden' name='i' value='$gameID' />";
+                        echo "<input type='hidden' name='t' value='GAME_BOXART' />";
+                        echo "<input type='file' name='file' id='file' />";
+                        echo "<input type='submit' name='submit' style='float: right;' value='Submit' />";
+                        echo "</form><br/>";
+
+                        echo "<li>Update game details:</br>";
+                        echo "<form method='post' action='/submitgamedata.php' enctype='multipart/form-data'>";
+                        echo "<table><tbody>";
+                        echo "<input type='hidden' name='i' value='$gameID' />";
+                        echo "<tr><td>Developer:</td><td style='width:100%'><input type='text' name='d' value='$developer' style='width:100%;'/></td></tr>";
+                        echo "<tr><td>Publisher:</td><td style='width:100%'><input type='text' name='p' value='$publisher' style='width:100%;'/></td></tr>";
+                        echo "<tr><td>Genre:</td><td style='width:100%'><input type='text' name='g' value='$genre' style='width:100%;'/></td></tr>";
+                        echo "<tr><td>First Released:</td><td style='width:100%'><input type='text' name='r' value='$released' style='width:100%;'/></td></tr>";
+                        echo "</tbody></table>";
+                        echo "&nbsp;<input type='submit' style='float: right;' value='Submit' /></br></br>";
+                        echo "<div style='clear:all;'></div>";
+                        echo "</form>";
+                        echo "</li>";
+
+                        if( $permissions >= \RA\Permissions::Admin )
+                        {
+                            echo "<tr><td>";
+                            echo "<form method='post' action='/submitgamedata.php' enctype='multipart/form-data'>";
+                            echo "New Forum Topic ID:";
+                            echo "<input type='hidden' name='i' value='$gameID' />";
+                            echo "<input type='text' name='f' size='20'/>";
+                            echo "<input type='submit' style='float: right;' value='Submit' size='37'/>";
+                            echo "</form>";
+                            echo "</td></tr>";
+                        }
+
+                        echo "<li>Similar Games</li>";
+                        echo "<table><tbody>";
+                        if( count( $gameAlts ) > 0 )
+                        {
+                            echo "<tr><td>";
+                            echo "<form method='post' action='/submitgamedata.php' enctype='multipart/form-data'>";
+                            echo "<input type='hidden' name='i' value='$gameID' />";
+
+                            echo "To remove (game ID):";
+                            echo "<select name='m'>";
+                            echo "<option value='0' selected>-</option>";
+
+                            foreach( $gameAlts as $gameAlt )
+                            {
+                                $gameAltID = $gameAlt[ 'gameIDAlt' ];
+                                $gameAltTitle = $gameAlt[ 'Title' ];
+                                $gameAltConsole = $gameAlt[ 'ConsoleName' ];
+                                echo "<option value='$gameAltID'>$gameAltTitle ($gameAltConsole)</option>";
+                            }
+                            echo "</select>";
+                            echo "<input type='submit' style='float: right;' value='Remove' size='37'/>";
+                            echo "</form>";
+                            echo "</td></tr>";
+                        }
+
                         echo "<tr><td>";
                         echo "<form method='post' action='/submitgamedata.php' enctype='multipart/form-data'>";
-                        echo "New Forum Topic ID:";
+                        echo "To add (game ID):";
                         echo "<input type='hidden' name='i' value='$gameID' />";
-                        echo "<input type='text' name='f' size='20'/>";
+                        echo "<input type='text' name='n' class='searchboxgame' size='20'/>";
+                        echo "<input type='submit' style='float: right;' value='Add' size='37'/>";
+                        echo "</form>";
+                        echo "</td></tr>";
+                        echo "</tbody></table>";
+
+                        echo "<li>Update <a href='https://docs.retroachievements.org/Rich-Presence/'>Rich Presence</a> script:</li>";
+                        echo "<form method='post' action='/submitgamedata.php' enctype='multipart/form-data'>";
+                        echo "<input type='hidden' value='$gameID' name='i'></input>";
+                        echo "<textarea style='height:320px;' class='code fullwidth' name='x'>$richPresenceData</textarea></br>";
                         echo "<input type='submit' style='float: right;' value='Submit' size='37'/>";
                         echo "</form>";
-                        echo "</td></tr>";
-                    }
+                        echo "</li>";
 
-                    echo "<li>Similar Games</li>";
-                    echo "<table><tbody>";
-                    if( count( $gameAlts ) > 0 )
-                    {
-                        echo "<tr><td>";
-                        echo "<form method='post' action='/submitgamedata.php' enctype='multipart/form-data'>";
-                        echo "<input type='hidden' name='i' value='$gameID' />";
+                        echo "</ul>";
 
-                        echo "To remove (game ID):";
-                        echo "<select name='m'>";
-                        echo "<option value='0' selected>-</option>";
+                        echo "</div>";
 
-                        foreach( $gameAlts as $gameAlt )
-                        {
-                            $gameAltID = $gameAlt[ 'gameIDAlt' ];
-                            $gameAltTitle = $gameAlt[ 'Title' ];
-                            $gameAltConsole = $gameAlt[ 'ConsoleName' ];
-                            echo "<option value='$gameAltID'>$gameAltTitle ($gameAltConsole)</option>";
-                        }
-                        echo "</select>";
-                        echo "<input type='submit' style='float: right;' value='Remove' size='37'/>";
-                        echo "</form>";
-                        echo "</td></tr>";
-                    }
-
-                    echo "<tr><td>";
-                    echo "<form method='post' action='/submitgamedata.php' enctype='multipart/form-data'>";
-                    echo "To add (game ID):";
-                    echo "<input type='hidden' name='i' value='$gameID' />";
-                    echo "<input type='text' name='n' class='searchboxgame' size='20'/>";
-                    echo "<input type='submit' style='float: right;' value='Add' size='37'/>";
-                    echo "</form>";
-                    echo "</td></tr>";
-                    echo "</tbody></table>";
-
-                    echo "<li>Update <a href='https://docs.retroachievements.org/Rich-Presence/'>Rich Presence</a> script:</li>";
-                    echo "<form method='post' action='/submitgamedata.php' enctype='multipart/form-data'>";
-                    echo "<input type='hidden' value='$gameID' name='i'></input>";
-                    echo "<textarea style='height:320px;' class='code fullwidth' name='x'>$richPresenceData</textarea></br>";
-                    echo "<input type='submit' style='float: right;' value='Submit' size='37'/>";
-                    echo "</form>";
-                    echo "</li>";
-
-                    echo "</ul>";
-
-                    echo "</div>";
-
-                    echo "</div>";
+                        echo "</div>";
+                    } // end of "if developer"
                 }
 
                 if( $flags == 5 )
@@ -669,8 +673,8 @@ $numGridlines = $numAchievements;
                     }
 
                     echo "<div class='progressbar'>";
-                    echo "<div class='completion' 			style='width:$pctAwardedCasual%'>";
-                    echo "<div class='completionhardcore' 	style='width:$pctAwardedHardcore%'>";
+                    echo "<div class='completion'         style='width:$pctAwardedCasual%'>";
+                    echo "<div class='completionhardcore' style='width:$pctAwardedHardcore%'>";
                     echo "&nbsp;";
                     echo "</div>";
                     echo "</div>";
@@ -775,7 +779,7 @@ $numGridlines = $numAchievements;
                     for( $i = 0; $i < 2; $i++ )
                     {
                         if( $i == 0 && $numEarnedCasual == 0 )
-                            continue; //	remove potential unnecessary empty table
+                            continue; // remove potential unnecessary empty table
 
                         $numOutput = 0;
 
@@ -843,8 +847,8 @@ $numGridlines = $numAchievements;
                             }
 
                             echo "<div class='progressbar allusers'>";
-                            echo "<div class='completion allusers' 			style='width:$pctAwardedCasual%'>";
-                            echo "<div class='completionhardcore allusers' 	style='width:$pctAwardedHardcore%'>";
+                            echo "<div class='completion allusers'         style='width:$pctAwardedCasual%'>";
+                            echo "<div class='completionhardcore allusers' style='width:$pctAwardedHardcore%'>";
                             echo "&nbsp;";
                             echo "</div>";
                             echo "</div>";
@@ -865,7 +869,7 @@ $numGridlines = $numAchievements;
                                 echo "<div class='date smalltext'>unlocked on<br/>$dateAch<br/></div>";
 
 
-                            echo "</div>"; //	achievemententry
+                            echo "</div>"; // achievemententry
                             echo "</td>";
 
                             echo "</tr>";
@@ -879,7 +883,7 @@ $numGridlines = $numAchievements;
                 RenderLinkToGameForum( $user, $cookie, $gameTitle, $gameID, $forumTopicID );
                 echo "<br><br>";
 
-                //	Render article comments
+                // Render article comments
                 $forceAllowDeleteComments = $permissions >= \RA\Permissions::Admin;
                 RenderCommentsComponent( $user, $numArticleComments, $commentData, $gameID, 1, $forceAllowDeleteComments );
                 ?>
@@ -888,7 +892,7 @@ $numGridlines = $numAchievements;
 
         <div id='rightcontainer'>
             <?php
-            //	Render game box art
+            // Render game box art
             RenderBoxArt( $gameData[ 'ImageBoxArt' ] );
 
             if( isset( $user ) )

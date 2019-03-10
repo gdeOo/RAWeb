@@ -181,53 +181,56 @@ RenderDocType( TRUE );
             }
             echo "<br/><br/><br/><br/>";
 
-            if( isset( $user ) && $permissions >= \RA\Permissions::Developer )
+            if( isset( $user ) && $permissions >= \RA\Permissions::JrDeveloper )
             {
-                echo "<div class='devbox'>";
-                echo "<span onclick=\"$('#devboxcontent').toggle(500); return false;\">Dev (Click to show):</span><br/>";
-                echo "<div id='devboxcontent'>";
+                if( $permissions >= \RA\Permissions::Developer )
+                {
+                    echo "<div class='devbox'>";
+                    echo "<span onclick=\"$('#devboxcontent').toggle(500); return false;\">Dev (Click to show):</span><br/>";
+                    echo "<div id='devboxcontent'>";
 
-                echo "<li>Set embedded video URL:</li>";
-                echo "<table><tbody>";
-                echo "<input type='hidden' name='a' value='$achievementID' />";
-                echo "<input type='hidden' name='f' value='2' />";
-                echo "<input type='hidden' name='u' value='$user' />";
-                echo "<tr><td>Embed:</td><td style='width:100%'><input id='embedurlinput' type='text' name='v' value='$embedVidURL' style='width:100%;'/></td></tr>";
-                echo "</tbody></table>";
-                echo "&nbsp;<input type='submit' style='float: right;' value='Submit' onclick=\"PostEmbedUpdate()\" /></br></br>";
-                echo "<div style='clear:both;'></div>";
-                ?>
-                Examples for accepted formats:<br>
-                <p style="margin-bottom: 20px; float: left; clear: both;">
-                    <small style="width:50%; word-break: break-word; float: left">
-                        https://www.youtube.com/v/ID<br>
-                        https://www.youtube.com/watch?v=ID<br>
-                        https://youtu.be/ID<br>
-                        https://www.youtube.com/embed/ID<br>
-                        https://www.youtube.com/watch?v=ID<br>
-                        www.youtube.com/watch?v=ID<br>
-                        https://www.twitch.tv/videos/ID<br>
-                        https://www.twitch.tv/collections/ID<br>
-                        https://www.twitch.tv/ID/v/ID<br>
-                        https://clips.twitch.tv/ID<br>
-                    </small>
-                    <small style="width:50%; word-break: break-word; float: left">
-                        https://imgur.com/gallery/ID -> turns out as link without extension<br>
-                        https://imgur.com/a/ID.gif -> will use .gifv instead<br>
-                        https://imgur.com/gallery/ID.gifv<br>
-                        https://imgur.com/a/ID.gifv<br>
-                        https://i.imgur.com/ID.gifv<br>
-                        https://i.imgur.com/ID.webm<br>
-                        https://i.imgur.com/ID.mp4<br>
-                    </small>
-                </p>
-                <?php
-                echo "<div style='clear:both;'></div>";
+                    echo "<li>Set embedded video URL:</li>";
+                    echo "<table><tbody>";
+                    echo "<input type='hidden' name='a' value='$achievementID' />";
+                    echo "<input type='hidden' name='f' value='2' />";
+                    echo "<input type='hidden' name='u' value='$user' />";
+                    echo "<tr><td>Embed:</td><td style='width:100%'><input id='embedurlinput' type='text' name='v' value='$embedVidURL' style='width:100%;'/></td></tr>";
+                    echo "</tbody></table>";
+                    echo "&nbsp;<input type='submit' style='float: right;' value='Submit' onclick=\"PostEmbedUpdate()\" /></br></br>";
+                    echo "<div style='clear:both;'></div>";
+                    ?>
+                    Examples for accepted formats:<br>
+                    <p style="margin-bottom: 20px; float: left; clear: both;">
+                        <small style="width:50%; word-break: break-word; float: left">
+                            https://www.youtube.com/v/ID<br>
+                            https://www.youtube.com/watch?v=ID<br>
+                            https://youtu.be/ID<br>
+                            https://www.youtube.com/embed/ID<br>
+                            https://www.youtube.com/watch?v=ID<br>
+                            www.youtube.com/watch?v=ID<br>
+                            https://www.twitch.tv/videos/ID<br>
+                            https://www.twitch.tv/collections/ID<br>
+                            https://www.twitch.tv/ID/v/ID<br>
+                            https://clips.twitch.tv/ID<br>
+                        </small>
+                        <small style="width:50%; word-break: break-word; float: left">
+                            https://imgur.com/gallery/ID -> turns out as link without extension<br>
+                            https://imgur.com/a/ID.gif -> will use .gifv instead<br>
+                            https://imgur.com/gallery/ID.gifv<br>
+                            https://imgur.com/a/ID.gifv<br>
+                            https://i.imgur.com/ID.gifv<br>
+                            https://i.imgur.com/ID.webm<br>
+                            https://i.imgur.com/ID.mp4<br>
+                        </small>
+                    </p>
+                    <?php
+                    echo "<div style='clear:both;'></div>";
 
-                if( $achFlags == 3 )
-                    echo "<li>State: Official&nbsp;<a href='/requestupdateachievement.php?a=$achievementID&amp;f=3&amp;u=$user&amp;v=5'>Demote To Unofficial</a></li>";
-                else if( $achFlags == 5 )
-                    echo "<li>State: Unofficial</li>";
+                    if( $achFlags == 3 )
+                        echo "<li>State: Official&nbsp;<a href='/requestupdateachievement.php?a=$achievementID&amp;f=3&amp;u=$user&amp;v=5'>Demote To Unofficial</a></li>";
+                    else if( $achFlags == 5 )
+                        echo "<li>State: Unofficial</li>";
+                } // end of "if developer"
 
                 echo "<li> Achievement ID: ". $achievementID ."</li>";
 
