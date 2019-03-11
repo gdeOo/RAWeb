@@ -391,7 +391,7 @@ function getLeaderboardsForGame( $gameID, &$dataOut, $localUser )
         //error_log( $query );
     }
 
-    return count( $dataOut );
+    return count( $dataOut ?? [] );
 }
 
 //	15:21 16/10/2014

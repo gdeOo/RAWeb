@@ -1440,7 +1440,7 @@ function getUserPageInfo( $user, &$libraryOut, $numGames, $numRecentAchievements
 
     $libraryOut[ 'Rank' ] = getUserRank( $user ); //	ANOTHER call... can't we cache this?
 
-    $numRecentlyPlayed = count( $recentlyPlayedData );
+    $numRecentlyPlayed = count( $recentlyPlayedData ?? [] );
 
     if( $numRecentlyPlayed > 0 )
     {

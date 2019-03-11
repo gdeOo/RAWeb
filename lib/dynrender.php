@@ -1594,7 +1594,7 @@ function RenderCompletedGamesList( $user, $userCompletedGamesList )
 
 function RenderGameLeaderboardsComponent( $gameID, $lbData )
 {
-    $numLBs = count( $lbData );
+    $numLBs = count( $lbData ?? [] );
     echo "<div class='component'>";
     echo "<h3>Leaderboards</h3>";
 
