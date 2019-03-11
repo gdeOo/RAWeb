@@ -620,12 +620,10 @@ $numGridlines = $numAchievements;
                         echo "</form>";
                         echo "</li>";
 
-                        echo "</ul>";
-
-                        echo "</div>";
-
-                        echo "</div>";
                     } // end of "if developer"
+                    echo "</ul>";
+                    echo "</div>";
+                    echo "</div>";
                 }
 
                 if( $flags == 5 )
