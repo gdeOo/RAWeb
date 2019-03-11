@@ -653,7 +653,7 @@ function RenderTitleBar( $user, $points, $truePoints, $unreadMessageCount, $erro
         echo ")";
         echo "</a>";
 
-        if( $permissions >= \RA\Permissions::Developer ) // 3 == Moderator
+        if( $permissions >= \RA\Permissions::Developer )
         {
             $openTickets = countOpenTicketsByDev( $user );
             if( $openTickets > 0 )
