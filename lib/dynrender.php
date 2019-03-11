@@ -2427,8 +2427,9 @@ function RenderLinkToGameForum( $user, $cookie, $gameTitle, $gameID, $forumTopic
     else
     {
         echo "No forum topic";
-        if( isset( $user ) && $permissions >= 3 ) // 3 == Developer
+        if( isset( $user ) && $permissions >= \RA\Permissions::Developer ) {
             echo " - <a href='/generategameforumtopic.php?u=$user&c=$cookie&g=$gameID'>Create the official forum topic for $gameTitle</a>";
+        }
     }
 }
 
