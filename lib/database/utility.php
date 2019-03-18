@@ -130,7 +130,7 @@ function RA_ReadCookieCredentials( &$userOut, &$pointsOut, &$truePointsOut, &$un
     {
         $dbResult = mysqli_fetch_array( $result );
         $serverCookie = $dbResult[ 'cookie' ];
-        if( strcmp( $serverCookie, $cookie ) !== 0 || $dbResult[ 'Permissions' ] == -1 )
+        if( strcmp( $serverCookie, $cookie ) !== 0 || $dbResult[ 'Permissions' ] <= \RA\Permissions::Banned )
         {
             RA_ClearCookie( 'RA_User' );
             RA_ClearCookie( 'RA_Cookie' );
@@ -280,9 +280,9 @@ function generateAPIKey( $user )
         return "";
     }
 
-    if( $userData[ 'Permissions' ] < 1 )
+    if( $userData[ 'Permissions' ] < \RA\Permissions::Verified )
     {
-        error_log( __FUNCTION__ . " API Key gen fail 2: not a full account!" );
+        error_log( __FUNCTION__ . " API Key gen fail 2: not a verified account!" );
         return "";
     }
 
