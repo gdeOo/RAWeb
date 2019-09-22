@@ -8,7 +8,7 @@ require_once(__DIR__ . '/../bootstrap.php');
 //    19:06 10/07/2013
 function getUserBestDaysList($user, $listOffset, $maxDays, $sortBy)
 {
-    $retVal = Array();
+    $retVal = [];
 
     $query = "SELECT YEAR(aw.Date) AS Year, MONTH(aw.Date) AS Month, DAY(aw.Date) AS Day, COUNT(*) AS NumAwarded, SUM(Points) AS TotalPointsEarned FROM Awarded AS aw ";
     $query .= "LEFT JOIN Achievements AS ach ON ach.ID = aw.AchievementID ";
@@ -20,23 +20,17 @@ function getUserBestDaysList($user, $listOffset, $maxDays, $sortBy)
         $sortBy = 1;
     }
 
-    if ($sortBy == 1)        //    Date, asc
-    {
+    if ($sortBy == 1) {        //    Date, asc
         $query .= "ORDER BY aw.Date DESC ";
-    } elseif ($sortBy == 2)    //    Num Awarded, asc
-    {
+    } elseif ($sortBy == 2) {    //    Num Awarded, asc
         $query .= "ORDER BY NumAwarded DESC ";
-    } elseif ($sortBy == 3)    //    Total Points earned, asc
-    {
+    } elseif ($sortBy == 3) {    //    Total Points earned, asc
         $query .= "ORDER BY TotalPointsEarned DESC ";
-    } elseif ($sortBy == 11)//    Date, desc
-    {
+    } elseif ($sortBy == 11) {//    Date, desc
         $query .= "ORDER BY aw.Date ASC ";
-    } elseif ($sortBy == 12)//    Num Awarded, desc
-    {
+    } elseif ($sortBy == 12) {//    Num Awarded, desc
         $query .= "ORDER BY NumAwarded ASC ";
-    } elseif ($sortBy == 13)//    Total Points earned, desc
-    {
+    } elseif ($sortBy == 13) {//    Total Points earned, desc
         $query .= "ORDER BY TotalPointsEarned ASC ";
     }
 
@@ -60,7 +54,7 @@ function getUserBestDaysList($user, $listOffset, $maxDays, $sortBy)
 
 function getAchievementsEarnedBetween($dateStart, $dateEnd, $user)
 {
-    $retVal = Array();
+    $retVal = [];
 
     if (!isValidUsername($user)) {
         return $retVal;
@@ -118,7 +112,7 @@ function getAchievementsEarnedOnDay($dateInput, $user)
 
 function getAwardedList($user, $listOffset, $maxToFetch, $dateFrom = null, $dateTo = null)
 {
-    $retVal = Array();
+    $retVal = [];
 
     if (!isValidUsername($user)) {
         return $retVal;

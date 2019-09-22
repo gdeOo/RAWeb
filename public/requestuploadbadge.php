@@ -28,7 +28,7 @@ return false;
 // //	08:38 28/10/2014
 // function UploadUserPic( $user, $filename, $rawImage )
 // {
-//     $response = array();
+//     $response = [];
 //
 //     $response[ 'Filename' ] = $filename;
 //     $response[ 'User' ] = $user;
@@ -107,7 +107,7 @@ return false;
 // //	08:56 28/10/2014
 // function UploadBadgeImage( $file )
 // {
-//     $response = array();
+//     $response = [];
 //
 //     $filename = $file[ "name" ];
 //     $filesize = $file[ "size" ];
@@ -117,7 +117,7 @@ return false;
 //     $response[ 'Filename' ] = $filename;
 //     $response[ 'Size' ] = $filesize;
 //
-//     $allowedExts = array( "png", "jpeg", "jpg", "gif" );
+//     $allowedExts = ["png", "jpeg", "jpg", "gif"];
 //     $filenameParts = explode( ".", $filename );
 //     $extension = strtolower( end( $filenameParts ) );
 //

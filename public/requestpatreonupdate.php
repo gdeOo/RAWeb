@@ -1,18 +1,18 @@
 <?php
 require_once __DIR__ . '/../lib/bootstrap.php';
 
-error_log( "RequestPatreonUpdate Start 6" );
-error_log( print_r( getallheaders(), true ) );
-error_log( print_r( $_SERVER, true ) );     //
-error_log( print_r( $_REQUEST, true ) );  //a, empty
-error_log( print_r( $_POST, true ) );     // empty
-error_log( print_r( $_GET, true ) );      //a, empty
-error_log( print_r( $HTTP_RAW_POST_DATA, true ) );
+error_log("RequestPatreonUpdate Start 6");
+error_log(print_r(getallheaders(), true));
+error_log(print_r($_SERVER, true));     //
+error_log(print_r($_REQUEST, true));  //a, empty
+error_log(print_r($_POST, true));     // empty
+error_log(print_r($_GET, true));      //a, empty
+error_log(print_r($HTTP_RAW_POST_DATA, true));
 
-$rawdata = file_get_contents( 'php://input' );
-error_log( "Raw data: [" . $rawdata . "]" );
+$rawdata = file_get_contents('php://input');
+error_log("Raw data: [" . $rawdata . "]");
 
-error_log( "RequestPatreonUpdate End 6" );
+error_log("RequestPatreonUpdate End 6");
 
 //$patreonEvent = $_SERVER[ 'HTTP_X_PATREON_EVENT' ];
 //$patreonSignature = $_SERVER[ 'HTTP_X_PATREON_SIGNATURE' ];

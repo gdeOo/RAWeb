@@ -51,8 +51,13 @@ RenderDocType(true);
 
 <head prefix="og: http://ogp.me/ns# retroachievements: http://ogp.me/ns/apps/retroachievements#">
     <?php RenderSharedHeader($user); ?>
-    <?php RenderFBMetaData($pageTitle, "Leaderboard", "$gameIcon", "/leaderboardinfo.php?i=$lbID",
-        "Leaderboard: $lbTitle ($gameTitle, $consoleName): "); ?>
+    <?php RenderFBMetaData(
+    $pageTitle,
+    "Leaderboard",
+    "$gameIcon",
+    "/leaderboardinfo.php?i=$lbID",
+    "Leaderboard: $lbTitle ($gameTitle, $consoleName): "
+); ?>
     <?php RenderTitleTag($pageTitle, $user); ?>
     <?php RenderGoogleTracking(); ?>
 </head>
@@ -184,8 +189,8 @@ RenderDocType(true);
                 echo "<td class='lb_rank'>$injectFmt1$nextRank$injectFmt2</td>";
 
                 echo "<td class='lb_user'>";
-                echo GetUserAndTooltipDiv( $nextUser, TRUE );
-                echo GetUserAndTooltipDiv( $nextUser, FALSE );
+                echo GetUserAndTooltipDiv($nextUser, true);
+                echo GetUserAndTooltipDiv($nextUser, false);
                 echo "</td>";
 
                 echo "<td class='lb_result'>$injectFmt1$nextScoreFormatted$injectFmt2</td>";

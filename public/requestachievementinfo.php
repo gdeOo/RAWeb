@@ -1,30 +1,25 @@
-<?php require_once __DIR__ . '/../lib/bootstrap.php';
-   	
-	if( !ValidatePOSTChars( "a" ) )
-	{
-		echo "FAILED";
-		return;
-	}
-	
-	$achID = $_POST["a"];
+<?php
+require_once __DIR__ . '/../lib/bootstrap.php';
 
-	//error_log( "test0" );
-	if( getAchievementWonData( $achID, $numWinners, $numPossibleWinners, $numRecentWinners, $winnerInfo, NULL ) )
-	{
-		//error_log( "test4" );
-		echo "OK:";
-		echo $numWinners;
-		echo '*';
-		echo $numPossibleWinners;
-		echo '*';
-		
-		foreach( $winnerInfo as $userObj )
-		{
-			echo $userObj['User'] . '*' . $userObj['DateAwarded'] . '*';
-		}
-	}
-	else
-	{
-		echo "FAILED: CANNOT FIND ACHIEVEMENT ID!";
-	}
-?>
+if (!ValidatePOSTChars("a")) {
+    echo "FAILED";
+    return;
+}
+
+$achID = $_POST["a"];
+
+//error_log( "test0" );
+if (getAchievementWonData($achID, $numWinners, $numPossibleWinners, $numRecentWinners, $winnerInfo, null)) {
+    //error_log( "test4" );
+    echo "OK:";
+    echo $numWinners;
+    echo '*';
+    echo $numPossibleWinners;
+    echo '*';
+
+    foreach ($winnerInfo as $userObj) {
+        echo $userObj['User'] . '*' . $userObj['DateAwarded'] . '*';
+    }
+} else {
+    echo "FAILED: CANNOT FIND ACHIEVEMENT ID!";
+}

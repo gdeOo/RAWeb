@@ -1,16 +1,16 @@
 <html>
-  <head>
+<head>
     <style>
-      /*body {
-        font-family: "Helvetica Neue", helvetica, arial;
-      }*/
+        /*body {
+          font-family: "Helvetica Neue", helvetica, arial;
+        }*/
 
     </style>
 
     <script>
         //var host = location.origin.replace(/^http/, 'ws');  //  Get the exact host, but replace url scheme with 'ws'
-		//var host = "ws://retroachievements.org/nodejs";
-		var host = "ws://retroachievements.org:5000";
+        //var host = "ws://retroachievements.org/nodejs";
+        var host = "ws://retroachievements.org:5000";
         var ws = new WebSocket(host);
 
         ws.onmessage = function (event) {
@@ -25,14 +25,14 @@
 
         ws.onclose = function (event) {
             li = document.createElement('li');
-            
+
             li.innerHTML = "Server closed connection!";
             document.querySelector('#pings').appendChild(li);
         };
     </script>
-  </head>
-  <body>
-    <h1>Pings</h1>
-    <ul id='pings'></ul>
-  </body>
+</head>
+<body>
+<h1>Pings</h1>
+<ul id='pings'></ul>
+</body>
 </html>

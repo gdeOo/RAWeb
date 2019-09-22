@@ -16,7 +16,7 @@ if ($gameID == null || $gameID == 0) {
     exit;
 }
 
-$friendScores = Array();
+$friendScores = [];
 if (RA_ReadCookieCredentials($user, $points, $truePoints, $unreadMessageCount, $permissions)) {
     getAllFriendsProgress($user, $gameID, $friendScores);
 }
@@ -93,20 +93,15 @@ $numLeaderboards = getLeaderboardsForGame($gameID, $lbData, $user);
 
 $screenshotWidth = 200;
 $screenshotHeight = 133;
-if ($consoleID == 1) //md
-{
+if ($consoleID == 1) { //md
     $screenshotHeight = 150; //129;
-} elseif ($consoleID == 3) //snes
-{
+} elseif ($consoleID == 3) { //snes
     $screenshotHeight = 175;
-} elseif ($consoleID == 4) //gb
-{
+} elseif ($consoleID == 4) { //gb
     $screenshotHeight = 180;
-} elseif ($consoleID == 5) // gba
-{
+} elseif ($consoleID == 5) { // gba
     $screenshotHeight = 133;
-} elseif ($consoleID == 6) // gbc
-{
+} elseif ($consoleID == 6) { // gbc
     $screenshotHeight = 180;
 }
 
@@ -124,7 +119,7 @@ $authors = [];
 if (isset($achievementData)) {
     //var_dump( $achievementData );
     foreach ($achievementData as &$nextAch) {
-        $authors[strtolower($nextAch['Author'])] = $nextAch['Author'];
+        $authors[mb_strtolower($nextAch['Author'])] = $nextAch['Author'];
         $totalPossible += $nextAch['Points'];
         $totalPossibleTrueRatio += $nextAch['TrueRatio'];
 
@@ -160,8 +155,7 @@ RenderDocType(true);
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
         // draws it.
-        function drawCharts()
-        {
+        function drawCharts() {
             var dataTotalScore = new google.visualization.DataTable();
 
             // Declare columns
@@ -169,35 +163,44 @@ RenderDocType(true);
             dataTotalScore.addColumn('number', 'Num Users');
 
             dataTotalScore.addRows([
-<?php
-$largestWonByCount = 0;
-$count = 0;
-for( $i = 1; $i <= $numAchievements; $i++ )
-{
-    if( $count++ > 0 )
-        echo ", ";
-    $wonByUserCount = $achDist[ $i ];
+                <?php
+                $largestWonByCount = 0;
+                $count = 0;
+                for ($i = 1; $i <= $numAchievements; $i++) {
+                    if ($count++ > 0) {
+                        echo ", ";
+                    }
+                    $wonByUserCount = $achDist[$i];
 
-    if( $wonByUserCount > $largestWonByCount )
-        $largestWonByCount = $wonByUserCount;
+                    if ($wonByUserCount > $largestWonByCount) {
+                        $largestWonByCount = $wonByUserCount;
+                    }
 
-    echo "[ {v:$i, f:\"Earned $i achievement(s)\"}, $wonByUserCount ] ";
-}
+                    echo "[ {v:$i, f:\"Earned $i achievement(s)\"}, $wonByUserCount ] ";
+                }
 
-if( $largestWonByCount > 30 )
-    $largestWonByCount = -2;
-?>
+                if ($largestWonByCount > 30) {
+                    $largestWonByCount = -2;
+                }
+                ?>
             ]);
 
-<?php
-$numGridlines = $numAchievements;
-?>
+            <?php
+            $numGridlines = $numAchievements;
+            ?>
 
             var optionsTotalScore = {
                 backgroundColor: 'transparent',
                 //title: 'Achievement Distribution',
                 titleTextStyle: {color: '#186DEE'}, //cc9900
-                hAxis: {textStyle: {color: '#186DEE'}, gridlines: {count:<?php echo $numGridlines; ?>, color: '#334433'}, minorGridlines: {count: 0}, format: '#', slantedTextAngle: 90, maxAlternation: 0},
+                hAxis: {
+                    textStyle: {color: '#186DEE'},
+                    gridlines: {count:<?php echo $numGridlines; ?>, color: '#334433'},
+                    minorGridlines: {count: 0},
+                    format: '#',
+                    slantedTextAngle: 90,
+                    maxAlternation: 0
+                },
                 vAxis: {textStyle: {color: '#186DEE'}, gridlines: {count:<?php echo $largestWonByCount + 1; ?>}, viewWindow: {min: 0}, format: '#'},
                 legend: {position: 'none'},
                 chartArea: {'width': '85%', 'height': '78%'},
@@ -206,8 +209,7 @@ $numGridlines = $numAchievements;
                 pointSize: 4
             };
 
-            function resize()
-            {
+            function resize() {
                 chartScoreProgress = new google.visualization.AreaChart(document.getElementById('chart_distribution'));
                 chartScoreProgress.draw(dataTotalScore, optionsTotalScore);
 
@@ -221,8 +223,13 @@ $numGridlines = $numAchievements;
     </script>
 
     <?php RenderSharedHeader($user); ?>
-    <?php RenderFBMetaData($pageTitle, "game", $gameData['ImageIcon'], "/Game/$gameID",
-        "Game Info for $gameTitle ($consoleName)"); ?>
+    <?php RenderFBMetaData(
+                $pageTitle,
+                "game",
+                $gameData['ImageIcon'],
+                "/Game/$gameID",
+                "Game Info for $gameTitle ($consoleName)"
+            ); ?>
     <?php RenderTitleTag($pageTitle, $user); ?>
     <?php RenderGoogleTracking(); ?>
 
@@ -231,8 +238,7 @@ $numGridlines = $numAchievements;
         var lastKnownAchRating = 0;
         var lastKnownGameRating = 0;
 
-        function SetLitStars(container, numStars)
-        {
+        function SetLitStars(container, numStars) {
             $(container + ' a').removeClass('starlit');
             $(container + ' a').removeClass('starhalf');
 
@@ -247,31 +253,26 @@ $numGridlines = $numAchievements;
             if (numStars >= 4.5)
                 $(container + ' a:first-child + a + a + a + a').addClass('starhalf');
 
-            if (numStars >= 1)
-            {
+            if (numStars >= 1) {
                 $(container + ' a:first-child').removeClass('starhalf');
                 $(container + ' a:first-child').addClass('starlit');
             }
-            if (numStars >= 2)
-            {
+            if (numStars >= 2) {
                 $(container + ' a:first-child + a').removeClass('starhalf');
                 $(container + ' a:first-child + a').addClass('starlit');
             }
 
-            if (numStars >= 3)
-            {
+            if (numStars >= 3) {
                 $(container + ' a:first-child + a + a').removeClass('starhalf');
                 $(container + ' a:first-child + a + a').addClass('starlit');
             }
 
-            if (numStars >= 4)
-            {
+            if (numStars >= 4) {
                 $(container + ' a:first-child + a + a + a').removeClass('starhalf');
                 $(container + ' a:first-child + a + a + a').addClass('starlit');
             }
 
-            if (numStars >= 5)
-            {
+            if (numStars >= 5) {
                 $(container + ' a:first-child + a + a + a + a').removeClass('starhalf');
                 $(container + ' a:first-child + a + a + a + a').addClass('starlit');
             }
@@ -308,8 +309,7 @@ $numGridlines = $numAchievements;
             });
         }
 
-        function SubmitRating(user, gameID, ratingObjectType, value)
-        {
+        function SubmitRating(user, gameID, ratingObjectType, value) {
             $.ajax({
                 url: '/API/API_SetGameRating.php?i=' + gameID + '&u=' + user + '&t=' + ratingObjectType + '&v=' + value,
                 dataType: 'json',
@@ -327,60 +327,58 @@ $numGridlines = $numAchievements;
 
             //	Add these handlers onload, they don't exist yet
             $('.starimg').hover(
-                    function () {
-                        //	On hover
+                function () {
+                    //	On hover
 
-                        if ($(this).parent().is($('#ratingach')))
-                        {
-                            //	Ach:
-                            var numStars = 0;
-                            if ($(this).hasClass('1star'))
-                                numStars = 1;
-                            else if ($(this).hasClass('2star'))
-                                numStars = 2;
-                            else if ($(this).hasClass('3star'))
-                                numStars = 3;
-                            else if ($(this).hasClass('4star'))
-                                numStars = 4;
-                            else if ($(this).hasClass('5star'))
-                                numStars = 5;
+                    if ($(this).parent().is($('#ratingach'))) {
+                        //	Ach:
+                        var numStars = 0;
+                        if ($(this).hasClass('1star'))
+                            numStars = 1;
+                        else if ($(this).hasClass('2star'))
+                            numStars = 2;
+                        else if ($(this).hasClass('3star'))
+                            numStars = 3;
+                        else if ($(this).hasClass('4star'))
+                            numStars = 4;
+                        else if ($(this).hasClass('5star'))
+                            numStars = 5;
 
-                            SetLitStars('#ratingach', numStars);
-                        } else
-                        {
-                            //	Game:
-                            var numStars = 0;
-                            if ($(this).hasClass('1star'))
-                                numStars = 1;
-                            else if ($(this).hasClass('2star'))
-                                numStars = 2;
-                            else if ($(this).hasClass('3star'))
-                                numStars = 3;
-                            else if ($(this).hasClass('4star'))
-                                numStars = 4;
-                            else if ($(this).hasClass('5star'))
-                                numStars = 5;
+                        SetLitStars('#ratingach', numStars);
+                    } else {
+                        //	Game:
+                        var numStars = 0;
+                        if ($(this).hasClass('1star'))
+                            numStars = 1;
+                        else if ($(this).hasClass('2star'))
+                            numStars = 2;
+                        else if ($(this).hasClass('3star'))
+                            numStars = 3;
+                        else if ($(this).hasClass('4star'))
+                            numStars = 4;
+                        else if ($(this).hasClass('5star'))
+                            numStars = 5;
 
-                            SetLitStars('#ratinggame', numStars);
-                        }
-                    },
-                    function () {
-                        //	On leave
-                        //GetRating( <?php echo $gameID; ?> );
-                    });
+                        SetLitStars('#ratinggame', numStars);
+                    }
+                },
+                function () {
+                    //	On leave
+                    //GetRating( <?php echo $gameID; ?> );
+                });
 
             $('.rating').hover(
-                    function () {
-                        //	On hover
-                    },
-                    function () {
-                        //	On leave
-                        //GetRating( <?php echo $gameID; ?> );
-                        if ($(this).is($('#ratingach')))
-                            SetLitStars('#ratingach', lastKnownAchRating);
-                        else
-                            SetLitStars('#ratinggame', lastKnownGameRating);
-                    });
+                function () {
+                    //	On hover
+                },
+                function () {
+                    //	On leave
+                    //GetRating( <?php echo $gameID; ?> );
+                    if ($(this).is($('#ratingach')))
+                        SetLitStars('#ratingach', lastKnownAchRating);
+                    else
+                        SetLitStars('#ratinggame', lastKnownGameRating);
+                });
 
             $('.starimg').click(function () {
 
@@ -626,7 +624,7 @@ $numGridlines = $numAchievements;
             if ($numAchievements > 0) {
                 echo "<b>Authors:</b> ";
                 foreach ($authors as $author) {
-                    echo GetUserAndTooltipDiv( $author, FALSE );
+                    echo GetUserAndTooltipDiv($author, false);
                     if (next($authors) != null) {
                         echo ', ';
                     }
@@ -651,8 +649,10 @@ $numGridlines = $numAchievements;
                     $pctAwardedCasual = sprintf("%01.0f", $pctAwardedCasual * 100.0);
                     $pctAwardedHardcore = sprintf("%01.0f", $pctAwardedHardcoreProportion * 100.0);
 
-                    $pctComplete = sprintf("%01.0f",
-                        (($numEarnedCasual + $numEarnedHardcore) * 100.0 / $numAchievements));
+                    $pctComplete = sprintf(
+                        "%01.0f",
+                        (($numEarnedCasual + $numEarnedHardcore) * 100.0 / $numAchievements)
+                    );
                 }
 
                 echo "<div class='progressbar'>";
@@ -808,8 +808,19 @@ $numGridlines = $numAchievements;
                         echo "<div class='achievemententry'>";
 
                         echo "<div class='achievemententryicon'>";
-                        echo GetAchievementAndTooltipDiv($achID, $achTitle, $achDesc, $achPoints, $gameTitle,
-                            $achBadgeName, true, true, $tooltipText, 64, $imgClass);
+                        echo GetAchievementAndTooltipDiv(
+                            $achID,
+                            $achTitle,
+                            $achDesc,
+                            $achPoints,
+                            $gameTitle,
+                            $achBadgeName,
+                            true,
+                            true,
+                            $tooltipText,
+                            64,
+                            $imgClass
+                        );
                         echo "</div>";
 
                         $pctAwardedCasual = 0;
@@ -827,8 +838,10 @@ $numGridlines = $numAchievements;
                             $pctAwardedCasual = sprintf("%01.2f", $pctAwardedCasual * 100.0);
                             $pctAwardedHardcore = sprintf("%01.2f", $pctAwardedHardcoreProportion * 100.0);
 
-                            $pctComplete = sprintf("%01.2f",
-                                (($wonBy + $wonByHardcore) * 100.0 / $numDistinctPlayersCasual));
+                            $pctComplete = sprintf(
+                                "%01.2f",
+                                (($wonBy + $wonByHardcore) * 100.0 / $numDistinctPlayersCasual)
+                            );
                         }
 
                         echo "<div class='progressbar allusers'>";
@@ -845,8 +858,19 @@ $numGridlines = $numAchievements;
                         echo "</div>"; //progressbar
 
                         echo "<div class='achievementdata'>";
-                        echo GetAchievementAndTooltipDiv($achID, $achTitle, $achDesc, $achPoints, $gameTitle,
-                            $achBadgeName, false, false, "", 64, $imgClass);
+                        echo GetAchievementAndTooltipDiv(
+                            $achID,
+                            $achTitle,
+                            $achDesc,
+                            $achPoints,
+                            $gameTitle,
+                            $achBadgeName,
+                            false,
+                            false,
+                            "",
+                            64,
+                            $imgClass
+                        );
                         echo " <span class='TrueRatio'>($achTrueRatio)</span>";
                         echo "<br/>";
                         echo "$achDesc<br/>";

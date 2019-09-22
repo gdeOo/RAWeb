@@ -1,34 +1,34 @@
 <?php
 require_once __DIR__ . '/../lib/bootstrap.php';
 
-RA_ReadCookieCredentials( $user, $points, $truePoints, $unreadMessageCount, $permissions );
+RA_ReadCookieCredentials($user, $points, $truePoints, $unreadMessageCount, $permissions);
 
-$userPage = seekGET( 'u', $user );
+$userPage = seekGET('u', $user);
 
-if( !isset( $userPage ) || !isValidUsername( $userPage ) )
-{
-    header( "Location: " . getenv('APP_URL') ."?e=notloggedin" );
+if (!isset($userPage) || !isValidUsername($userPage)) {
+    header("Location: " . getenv('APP_URL') . "?e=notloggedin");
     exit;
 }
 
-$listOffset = seekGET( 'o', 0 );
-$sortBy = seekGET( 's', 3 );
-$maxDays = seekGET( 'c', 15 );
-$userBestDaysList = getUserBestDaysList( $userPage, $listOffset, $maxDays, $sortBy );
+$listOffset = seekGET('o', 0);
+$sortBy = seekGET('s', 3);
+$maxDays = seekGET('c', 15);
+$userBestDaysList = getUserBestDaysList($userPage, $listOffset, $maxDays, $sortBy);
 
 $sortByGraphName = 'Total Points';
-if( $sortBy == 2 || $sortBy == 12 )
+if ($sortBy == 2 || $sortBy == 12) {
     $sortByGraphName = 'Num Achievements Earned';
+}
 
-$errorCode = seekGET( 'e' );
+$errorCode = seekGET('e');
 $pageTitle = "$userPage's Legacy";
 
-$userPagePoints = getScore( $userPage );
+$userPagePoints = getScore($userPage);
 
-getUserActivityRange( $userPage, $userSignedUp, $unused );
+getUserActivityRange($userPage, $userSignedUp, $unused);
 
-$userAwards = getUsersSiteAwards( $userPage );
-$userCompletedGamesList = getUsersCompletedGamesAndMax( $userPage );
+$userAwards = getUsersSiteAwards($userPage);
+$userCompletedGamesList = getUsersCompletedGamesAndMax($userPage);
 
 $userCompletedGames = [];
 
@@ -60,11 +60,11 @@ usort($userCompletedGames, "scorePctCompare");
 $userCompletedGamesList = $userCompletedGames;
 
 //	the past week
-$userScoreData = getAwardedList( $userPage, 0, 1000 );
+$userScoreData = getAwardedList($userPage, 0, 1000);
 
 //var_dump( $userScoreData );
 
-RenderDocType( TRUE );
+RenderDocType(true);
 ?>
 
 <head>
@@ -81,8 +81,7 @@ RenderDocType( TRUE );
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
         // draws it.
-        function drawCharts()
-        {
+        function drawCharts() {
 
             var dataTotalScore = new google.visualization.DataTable();
 
@@ -91,27 +90,27 @@ RenderDocType( TRUE );
             dataTotalScore.addColumn('number', 'Total Score');
 
             dataTotalScore.addRows([
-<?php
-$count = 0;
-foreach( $userScoreData as $dayInfo )
-{
-    if( $count++ > 0 )
-        echo ", ";
+                <?php
+                $count = 0;
+                foreach ($userScoreData as $dayInfo) {
+                    if ($count++ > 0) {
+                        echo ", ";
+                    }
 
-    $nextDay = $dayInfo[ 'Day' ];
-    $nextMonth = $dayInfo[ 'Month' ];
-    $nextYear = $dayInfo[ 'Year' ];
-    $nextDate = $dayInfo[ 'Date' ];
+                    $nextDay = $dayInfo['Day'];
+                    $nextMonth = $dayInfo['Month'];
+                    $nextYear = $dayInfo['Year'];
+                    $nextDate = $dayInfo['Date'];
 
-    $dateStr = getNiceDate( strtotime( $nextDate ), TRUE );
-    $value = $dayInfo[ 'CumulScore' ];
+                    $dateStr = getNiceDate(strtotime($nextDate), true);
+                    $value = $dayInfo['CumulScore'];
 
-    //echo "[\"$dateStr\", $value]";
-    //echo "[ {v:new Date(2013, 1, 1), f:\"$dateStr\"}, $value]";
-    echo "[ {v:new Date($nextYear,$nextMonth,$nextDay), f:'$dateStr'}, $value ]";
-    //echo "[ new Date( Date.parse( '$nextDate' ) ), $value]";
-}
-?>
+                    //echo "[\"$dateStr\", $value]";
+                    //echo "[ {v:new Date(2013, 1, 1), f:\"$dateStr\"}, $value]";
+                    echo "[ {v:new Date($nextYear,$nextMonth,$nextDay), f:'$dateStr'}, $value ]";
+                    //echo "[ new Date( Date.parse( '$nextDate' ) ), $value]";
+                }
+                ?>
             ]);
 
 
@@ -135,36 +134,39 @@ foreach( $userScoreData as $dayInfo )
             dataBestDays.addColumn('number', 'Points Earned');
 
             dataBestDays.addRows([
-<?php
-$arrayToUse = $userBestDaysList;
-if( $sortBy == 1 || $sortBy > 11 )
-    $arrayToUse = array_reverse( $userBestDaysList );
+                <?php
+                $arrayToUse = $userBestDaysList;
+                if ($sortBy == 1 || $sortBy > 11) {
+                    $arrayToUse = array_reverse($userBestDaysList);
+                }
 
-$count = 0;
-foreach( $arrayToUse as $dayInfo )
-{
-    if( $count++ > 0 )
-        echo ", ";
+                $count = 0;
+                foreach ($arrayToUse as $dayInfo) {
+                    if ($count++ > 0) {
+                        echo ", ";
+                    }
 
-    $nextDay = $dayInfo[ 'Day' ];
-    $nextMonth = $dayInfo[ 'Month' ];
-    $nextYear = $dayInfo[ 'Year' ];
+                    $nextDay = $dayInfo['Day'];
+                    $nextMonth = $dayInfo['Month'];
+                    $nextYear = $dayInfo['Year'];
 
-    $dateStr = "$nextDay/$nextMonth";
-    if( $nextYear != date( 'Y' ) )
-        $dateStr = "$nextDay/$nextMonth/$nextYear";
+                    $dateStr = "$nextDay/$nextMonth";
+                    if ($nextYear != date('Y')) {
+                        $dateStr = "$nextDay/$nextMonth/$nextYear";
+                    }
 
-    $nextNumAwarded = $dayInfo[ 'NumAwarded' ];
-    $nextTotalPointsEarned = $dayInfo[ 'TotalPointsEarned' ];
+                    $nextNumAwarded = $dayInfo['NumAwarded'];
+                    $nextTotalPointsEarned = $dayInfo['TotalPointsEarned'];
 
-    $value = $nextTotalPointsEarned;
-    if( $sortBy == 2 || $sortBy == 12 )
-        $value = $nextNumAwarded;
+                    $value = $nextTotalPointsEarned;
+                    if ($sortBy == 2 || $sortBy == 12) {
+                        $value = $nextNumAwarded;
+                    }
 
-    //echo "[ {v:new Date($nextYear,$nextMonth,$nextDay), f:'$dateStr'}, $value ]";
-    echo "[ '$dateStr', $value ]";
-}
-?>
+                    //echo "[ {v:new Date($nextYear,$nextMonth,$nextDay), f:'$dateStr'}, $value ]";
+                    echo "[ '$dateStr', $value ]";
+                }
+                ?>
             ]);
 
 
@@ -186,10 +188,8 @@ foreach( $arrayToUse as $dayInfo )
             var chartBestDays;
             var chartScoreProgress;
 
-            function selectHandlerBestDays(e)
-            {
-                if (chartBestDays.getSelection().length >= 1)
-                {
+            function selectHandlerBestDays(e) {
+                if (chartBestDays.getSelection().length >= 1) {
                     var dateAbbr = dataBestDays.getFormattedValue(chartBestDays.getSelection()[0].row, 0);
                     var firstSlashAt = dateAbbr.indexOf("/");
                     var secondSlashAt = dateAbbr.lastIndexOf("/");
@@ -199,11 +199,9 @@ foreach( $arrayToUse as $dayInfo )
                     var day = dateAbbr.split('/')[0];
                     var month = dateAbbr.split('/')[1];
 
-                    if (firstSlashAt != secondSlashAt)
-                    {
+                    if (firstSlashAt != secondSlashAt) {
                         d.setFullYear(dateAbbr.split('/')[2], month - 1, day);
-                    } else
-                    {
+                    } else {
                         d.setFullYear(new Date().getFullYear(), month - 1, day);
                     }
 
@@ -213,10 +211,8 @@ foreach( $arrayToUse as $dayInfo )
                 }
             }
 
-            function selectHandlerScoreProgress(e)
-            {
-                if (chartScoreProgress.getSelection().length >= 1)
-                {
+            function selectHandlerScoreProgress(e) {
+                if (chartScoreProgress.getSelection().length >= 1) {
                     var dateFormatted = dataTotalScore.getFormattedValue(chartScoreProgress.getSelection()[0].row, 0);
 
                     var d = new Date(Date.parse(dateFormatted));
@@ -228,8 +224,7 @@ foreach( $arrayToUse as $dayInfo )
                 }
             }
 
-            function resize()
-            {
+            function resize() {
                 chartBestDays = new google.visualization.ColumnChart(document.getElementById('chart_bestdays'));
                 chartBestDays.draw(dataBestDays, optionsBestDays);
 
@@ -245,99 +240,100 @@ foreach( $arrayToUse as $dayInfo )
         }
     </script>
 
-<?php RenderSharedHeader( $user ); ?>
-<?php RenderTitleTag( $pageTitle, $user ); ?>
-<?php RenderGoogleTracking(); ?>
+    <?php RenderSharedHeader($user); ?>
+    <?php RenderTitleTag($pageTitle, $user); ?>
+    <?php RenderGoogleTracking(); ?>
 </head>
 
 <body>
-    <?php RenderTitleBar( $user, $points, $truePoints, $unreadMessageCount, $errorCode, $permissions ); ?>
-<?php RenderToolbar( $user, $permissions ); ?>
+<?php RenderTitleBar($user, $points, $truePoints, $unreadMessageCount, $errorCode, $permissions); ?>
+<?php RenderToolbar($user, $permissions); ?>
 
-    <div id='mainpage'>
-        <div id='leftcontainer'>
-    <?php
-    echo "<div class='left'>";
+<div id='mainpage'>
+    <div id='leftcontainer'>
+        <?php
+        echo "<div class='left'>";
 
-    echo "<div class='navpath'>";
-    echo "<a href='/userList.php'>All Users</a>";
-    echo " &raquo; <a href='/User/$userPage'>$userPage</a>";
-    echo " &raquo; <b>History</b>";
-    echo "</div>";
+        echo "<div class='navpath'>";
+        echo "<a href='/userList.php'>All Users</a>";
+        echo " &raquo; <a href='/User/$userPage'>$userPage</a>";
+        echo " &raquo; <b>History</b>";
+        echo "</div>";
 
-    echo "<h3>$userPage's legacy</h3>";
+        echo "<h3>$userPage's legacy</h3>";
 
-    echo "<div class='userlegacy'>";
-    echo "<img src='/UserPic/$userPage.png' alt='$userPage' align='right' width='64' height='64'>";
-    echo "<b><a href='/User/$userPage'><strong>$userPage</strong></a> ($userPagePoints points)</b><br/>";
+        echo "<div class='userlegacy'>";
+        echo "<img src='/UserPic/$userPage.png' alt='$userPage' align='right' width='64' height='64'>";
+        echo "<b><a href='/User/$userPage'><strong>$userPage</strong></a> ($userPagePoints points)</b><br/>";
 
-    echo "Member since: " . getNiceDate( strtotime( $userSignedUp ), TRUE ) . "<br/>";
-    echo "<br/>";
-    echo "<br/>";
-    echo "<br/>";
+        echo "Member since: " . getNiceDate(strtotime($userSignedUp), true) . "<br/>";
+        echo "<br/>";
+        echo "<br/>";
+        echo "<br/>";
 
-    echo "</div>";
+        echo "</div>";
 
-    echo "<div id='chart_scoreprogress'></div>";
+        echo "<div id='chart_scoreprogress'></div>";
 
-    echo "<h3>Best Days</h3>";
-    echo "<div id='chart_bestdays'></div>";
+        echo "<h3>Best Days</h3>";
+        echo "<div id='chart_bestdays'></div>";
 
 
-    echo "<table class='smalltable'><tbody>";
+        echo "<table class='smalltable'><tbody>";
 
-    $sort1 = ($sortBy == 1) ? 11 : 1;
-    $sort2 = ($sortBy == 2) ? 12 : 2;
-    $sort3 = ($sortBy == 3) ? 13 : 3;
+        $sort1 = ($sortBy == 1) ? 11 : 1;
+        $sort2 = ($sortBy == 2) ? 12 : 2;
+        $sort3 = ($sortBy == 3) ? 13 : 3;
 
-    echo "<tr>";
-    echo "<th><a href='/history.php?s=$sort1'>Date</a></th>";
-    echo "<th><a href='/history.php?s=$sort2'>Num Achievements</a></th>";
-    echo "<th><a href='/history.php?s=$sort3'>Score Earned</a></th>";
-    echo "</tr>";
-
-    $dayCount = 0;
-    foreach( $userBestDaysList as $dayInfo )
-    {
-        $nextDay = $dayInfo[ 'Day' ];
-        $nextMonth = $dayInfo[ 'Month' ];
-        $nextYear = $dayInfo[ 'Year' ];
-        $nextNumAwarded = $dayInfo[ 'NumAwarded' ];
-        $nextTotalPointsEarned = $dayInfo[ 'TotalPointsEarned' ];
-
-        $dateUnix = strtotime( "$nextDay-$nextMonth-$nextYear" );
-        $dateStr = getNiceDate( $dateUnix, TRUE );
-
-        if( $dayCount++ % 2 == 0 )
-            echo "<tr>";
-        else
-            echo "<tr class='alt'>";
-
-        echo "<td>$dateStr</td>";
-        echo "<td><a href='historyexamine.php?d=$dateUnix&u=$userPage'>$nextNumAwarded</a></td>";
-        echo "<td><a href='historyexamine.php?d=$dateUnix&u=$userPage'>$nextTotalPointsEarned</a></td>";
-
+        echo "<tr>";
+        echo "<th><a href='/history.php?s=$sort1'>Date</a></th>";
+        echo "<th><a href='/history.php?s=$sort2'>Num Achievements</a></th>";
+        echo "<th><a href='/history.php?s=$sort3'>Score Earned</a></th>";
         echo "</tr>";
-    }
 
-    echo "</tbody></table>";
+        $dayCount = 0;
+        foreach ($userBestDaysList as $dayInfo) {
+            $nextDay = $dayInfo['Day'];
+            $nextMonth = $dayInfo['Month'];
+            $nextYear = $dayInfo['Year'];
+            $nextNumAwarded = $dayInfo['NumAwarded'];
+            $nextTotalPointsEarned = $dayInfo['TotalPointsEarned'];
 
-    echo "</div>";
-    ?>
-        </div>
-        <div id='rightcontainer'>
-            <?php
-            if( $user !== NULL )
-                RenderScoreLeaderboardComponent( $user, $points, TRUE );
+            $dateUnix = strtotime("$nextDay-$nextMonth-$nextYear");
+            $dateStr = getNiceDate($dateUnix, true);
 
-            RenderSiteAwards( $userAwards );
-            RenderCompletedGamesList( $user, $userCompletedGamesList );
-            ?>
-        </div>
+            if ($dayCount++ % 2 == 0) {
+                echo "<tr>";
+            } else {
+                echo "<tr class='alt'>";
+            }
 
+            echo "<td>$dateStr</td>";
+            echo "<td><a href='historyexamine.php?d=$dateUnix&u=$userPage'>$nextNumAwarded</a></td>";
+            echo "<td><a href='historyexamine.php?d=$dateUnix&u=$userPage'>$nextTotalPointsEarned</a></td>";
+
+            echo "</tr>";
+        }
+
+        echo "</tbody></table>";
+
+        echo "</div>";
+        ?>
+    </div>
+    <div id='rightcontainer'>
+        <?php
+        if ($user !== null) {
+            RenderScoreLeaderboardComponent($user, $points, true);
+        }
+
+        RenderSiteAwards($userAwards);
+        RenderCompletedGamesList($user, $userCompletedGamesList);
+        ?>
     </div>
 
-            <?php RenderFooter(); ?>
+</div>
+
+<?php RenderFooter(); ?>
 
 </body>
 </html>

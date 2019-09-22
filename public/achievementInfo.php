@@ -60,18 +60,22 @@ RenderDocType(true);
 ?>
 
 <head prefix="og: http://ogp.me/ns# retroachievements: http://ogp.me/ns/apps/retroachievements#">
-    <?php RenderSharedHeader($user); ?>
-    <?php RenderFBMetadata("$achievementTitle in $gameTitle ($consoleName)", "achievement",
-        "/Badge/$badgeName" . ".png", "/Achievement/$achievementID", "$gameTitle ($consoleName) - $desc"); ?>
-    <?php RenderTitleTag($pageTitle, $user); ?>
-    <?php RenderGoogleTracking(); ?>
+    <?php
+    RenderSharedHeader($user);
+    RenderFBMetadata(
+        "$achievementTitle in $gameTitle ($consoleName)",
+        "achievement",
+        "/Badge/$badgeName" . ".png",
+        "/Achievement/$achievementID",
+        "$gameTitle ($consoleName) - $desc"
+    );
+    RenderTitleTag($pageTitle, $user);
+    RenderGoogleTracking(); ?>
 </head>
 
 <body>
 
-<?php
-if ($permissions >= 2) {
-    ?>
+<?php if ($permissions >= 2) { ?>
     <script>
         function PostEmbedUpdate() {
             var url = $("body").find("#embedurlinput").val();
@@ -97,9 +101,7 @@ if ($permissions >= 2) {
         }
     </script>
 
-    <?php
-}
-?>
+<?php } ?>
 
 <?php RenderTitleBar($user, $points, $truePoints, $unreadMessageCount, $errorCode, $permissions); ?>
 <?php RenderToolbar($user, $permissions); ?>
@@ -195,8 +197,7 @@ if ($permissions >= 2) {
             echo "<tr><td>Embed:</td><td style='width:100%'><input id='embedurlinput' type='text' name='v' value='$embedVidURL' style='width:100%;'/></td></tr>";
             echo "</tbody></table>";
             echo "&nbsp;<input type='submit' style='float: right;' value='Submit' onclick=\"PostEmbedUpdate()\" /></br></br>";
-            echo "<div style='clear:both;'></div>";
-            ?>
+            echo "<div style='clear:both;'></div>"; ?>
             Examples for accepted formats:<br>
             <p style="margin-bottom: 20px; float: left; clear: both;">
                 <small style="width:50%; word-break: break-word; float: left">
@@ -272,10 +273,10 @@ if ($permissions >= 2) {
                 echo "<tr>";
 
                 echo "<td style='width:34px'>";
-                echo GetUserAndTooltipDiv( $userWinner, TRUE );
+                echo GetUserAndTooltipDiv($userWinner, true);
                 echo "</td>";
                 echo "<td>";
-                echo GetUserAndTooltipDiv( $userWinner, FALSE );
+                echo GetUserAndTooltipDiv($userWinner, false);
                 echo "</td>";
                 echo "<td>";
                 if ($userObject['HardcoreMode']) {

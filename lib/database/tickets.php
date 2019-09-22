@@ -4,7 +4,8 @@ use RA\ActivityType;
 
 require_once(__DIR__ . '/../bootstrap.php');
 
-function isAllowedToSubmitTickets($user) {
+function isAllowedToSubmitTickets($user)
+{
     return isValidUsername($user)
         && getUserActivityRange($user, $firstLogin, $lastLogin)
         && time() - strtotime($firstLogin) > 86400 // 86400 seconds = 1 day
@@ -172,7 +173,7 @@ Thanks!";
         $summaryMsgOut = "FAILED!";
     }
 
-    return ($errorsEncountered == false);
+    return $errorsEncountered == false;
 }
 
 function getAllTickets(
@@ -186,7 +187,7 @@ function getAllTickets(
 ) {
     global $db;
 
-    $retVal = array();
+    $retVal = [];
     settype($givenGameID, 'integer');
     settype($ticketState, 'integer');
     settype($givenAchievementID, 'integer');
@@ -458,5 +459,4 @@ function gamesSortedByOpenTickets($count)
     }
 
     return $retVal;
-
 }

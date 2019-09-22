@@ -25,7 +25,7 @@ function validateUser(&$user, $pass, &$fbUser, $permissionRequired)
         if ($row['SaltedPass'] == $saltedHash) {
             $fbUser = $row['fbUser'];
             $user = $row['User'];
-            return ($row['Permissions'] >= $permissionRequired);
+            return $row['Permissions'] >= $permissionRequired;
         } else {
             error_log(__FUNCTION__ . " failed: passwords don't match for user:$user pass:" . $row['SaltedPass']);
             return false;
@@ -36,8 +36,15 @@ function validateUser(&$user, $pass, &$fbUser, $permissionRequired)
 function validateUser_app(&$user, $token, &$fbUser, $permissionRequired)
 {
     $fbUser = 0; //    TBD: Remove!
-    return RA_ReadTokenCredentials($user, $token, $pointsUnused, $truePointsUnused, $unreadMessagesUnused,
-        $permissionsUnused, $permissionRequired);
+    return RA_ReadTokenCredentials(
+        $user,
+        $token,
+        $pointsUnused,
+        $truePointsUnused,
+        $unreadMessagesUnused,
+        $permissionsUnused,
+        $permissionRequired
+    );
 }
 
 function validateUser_cookie(&$user, $cookie, $permissionRequired, &$permissions = 0)
@@ -49,7 +56,7 @@ function validateFromCookie(&$userOut, &$pointsOut, &$permissionsOut, $permissio
 {
     $userOut = RA_ReadCookie("RA_User");
     $cookie = RA_ReadCookie("RA_Cookie");
-    if (strlen($userOut) < 2 || strlen($cookie) < 2 || !isValidUsername($userOut)) {
+    if (mb_strlen($userOut) < 2 || mb_strlen($cookie) < 2 || !isValidUsername($userOut)) {
         //    There is no cookie
         return false;
     } else {
@@ -65,7 +72,7 @@ function validateFromCookie(&$userOut, &$pointsOut, &$permissionsOut, $permissio
                 $pointsOut = $data['RAPoints'];
                 $userOut = $data['User']; //    Case correction
                 $permissionsOut = $data['Permissions'];
-                return ($permissionsOut >= $permissionRequired);
+                return $permissionsOut >= $permissionRequired;
             } else {
                 error_log(__FUNCTION__ . " failed: cookie doesn't match for user:$userOut (given: $cookie, should be " . $data['cookie'] . ")");
                 return false;
@@ -87,8 +94,7 @@ function RA_ReadCookieCredentials(
     &$unreadMessagesOut,
     &$permissionOut,
     $minPermissions = null
-)
-{
+) {
     //    Promise some values:
     $userOut = RA_ReadCookie('RA_User');
     $cookie = RA_ReadCookie('RA_Cookie');
@@ -97,7 +103,7 @@ function RA_ReadCookieCredentials(
     $unreadMessagesOut = 0;
     $permissionOut = 0;
 
-    if (strlen($userOut) < 2 || strlen($cookie) < 10 || !isValidUsername($userOut)) {
+    if (mb_strlen($userOut) < 2 || mb_strlen($cookie) < 10 || !isValidUsername($userOut)) {
         RA_ClearCookie('RA_User');
         RA_ClearCookie('RA_Cookie');
         $userOut = null;
@@ -138,7 +144,7 @@ function RA_ReadCookieCredentials(
 
             //    Only compare if requested, otherwise return true meaning 'logged in'
             if (isset($minPermissions)) {
-                return ($permissionOut >= $minPermissions);
+                return $permissionOut >= $minPermissions;
             } else {
                 return true;
             }
@@ -154,8 +160,7 @@ function RA_ReadTokenCredentials(
     &$unreadMessagesOut,
     &$permissionOut,
     $permissionRequired = null
-)
-{
+) {
     if ($userOut == null || $userOut == '') {
         error_log(__FUNCTION__ . " failed: no user given: $userOut, $token ");
         return false;
@@ -177,7 +182,7 @@ function RA_ReadTokenCredentials(
         if ($row['appToken'] == $token) {
             $userOut = $row['User']; //    Case correction
             if (isset($permissionRequired)) {
-                return ($permissionOut >= $permissionRequired);
+                return $permissionOut >= $permissionRequired;
             } else {
                 return true;
             }
@@ -209,14 +214,14 @@ function RA_SetCookie($cookieName, $cookieValue)
 
 function RA_CookieExists($cookieName)
 {
-    return (isset($_COOKIE) &&
+    return isset($_COOKIE) &&
         array_key_exists($cookieName, $_COOKIE) &&
-        $_COOKIE[$cookieName] !== false);
+        $_COOKIE[$cookieName] !== false;
 }
 
 function ValidatePOSTChars($charsIn)
 {
-    $numChars = strlen($charsIn);
+    $numChars = mb_strlen($charsIn);
     for ($i = 0; $i < $numChars; $i++) {
         if (!array_key_exists($charsIn[$i], $_POST)) {
             error_log(__FUNCTION__ . " failed, missing " . $charsIn[$i] . " in POST!");
@@ -229,7 +234,7 @@ function ValidatePOSTChars($charsIn)
 
 function ValidateGETChars($charsIn)
 {
-    $numChars = strlen($charsIn);
+    $numChars = mb_strlen($charsIn);
     for ($i = 0; $i < $numChars; $i++) {
         if (!array_key_exists($charsIn[$i], $_GET)) {
             error_log(__FUNCTION__ . " failed, missing " . $charsIn[$i] . " in GET!");
@@ -242,7 +247,7 @@ function ValidateGETChars($charsIn)
 
 function ValidatePOSTorGETChars($charsIn)
 {
-    $numChars = strlen($charsIn);
+    $numChars = mb_strlen($charsIn);
     for ($i = 0; $i < $numChars; $i++) {
         if (!array_key_exists($charsIn[$i], $_GET)) {
             if (!array_key_exists($charsIn[$i], $_POST)) {
@@ -315,7 +320,7 @@ function LogSuccessfulAPIAccess($user)
 
 function ValidateAPIKey($user, $key)
 {
-    if (strlen($key) < 20 || !isValidUsername($user)) {
+    if (mb_strlen($key) < 20 || !isValidUsername($user)) {
         return false;
     }
 
@@ -335,7 +340,7 @@ function ValidateAPIKey($user, $key)
     LogSuccessfulAPIAccess($user);
 
     $data = mysqli_fetch_assoc($dbResult);
-    return ($data['COUNT(*)'] != 0);
+    return $data['COUNT(*)'] != 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -389,7 +394,7 @@ function getGameNumUniquePlayersByAwards($gameID)
 //    16:32 16/10/2014
 function getAchievementRecentWinnersData($achID, $offset, $count, $user = null, $friendsOnly = null)
 {
-    $retVal = array();
+    $retVal = [];
 
     //    Fetch the number of times this has been earned whatsoever (excluding hardcore)
     $query = "SELECT COUNT(*) AS NumEarned, ach.GameID
@@ -436,7 +441,7 @@ function getAchievementRecentWinnersData($achID, $offset, $count, $user = null, 
 //    Deprecated (but in use?)
 function getAchievementWonData($achID, &$numWinners, &$numPossibleWinners, &$numRecentWinners, &$winnerInfo, $user)
 {
-    $winnerInfo = array();
+    $winnerInfo = [];
 
     $query = "SELECT COUNT(*) AS NumEarned, ach.GameID
               FROM Awarded AS aw
@@ -519,7 +524,7 @@ function getConsoleList()
     $query = "SELECT ID, Name FROM Console";
     $dbResult = s_mysql_query($query);
 
-    $consoleList = array();
+    $consoleList = [];
 
     if ($dbResult !== false) {
         while ($db_entry = mysqli_fetch_assoc($dbResult)) {
@@ -552,7 +557,7 @@ function getStaticData()
 
 function getCodeNotesData($gameID)
 {
-    $codeNotesOut = array();
+    $codeNotesOut = [];
 
     settype($gameID, 'integer');
 
@@ -590,7 +595,7 @@ function getCodeNotes($gameID, &$codeNotesOut)
 
     $dbResult = s_mysql_query($query);
     if ($dbResult !== false) {
-        $codeNotesOut = Array();
+        $codeNotesOut = [];
 
         $numResults = 0;
         while ($db_entry = mysqli_fetch_assoc($dbResult)) {
@@ -635,8 +640,7 @@ function submitCodeNote2($user, $gameID, $address, $note)
         && getUserPermissions($user) < \RA\Permissions::Developer
         && $currentNotes[$i]['User'] !== $user
         && !empty($currentNotes[$i]['Note'])
-    )
-    {
+    ) {
         return false;
     }
 
@@ -655,7 +659,7 @@ function submitCodeNote2($user, $gameID, $address, $note)
 
     log_sql($query);
     $dbResult = mysqli_query($db, $query);
-    return ($dbResult !== false);
+    return $dbResult !== false;
 }
 
 //    21:55 30/04/2013
@@ -680,7 +684,7 @@ function submitCodeNote($user, $gameID, $address, $note)
     $userID = getUserIDFromUser($user);
 
     //    turn '0x00000f' into '15'
-    $addressAsInt = hexdec(substr($address, 2));
+    $addressAsInt = hexdec(mb_substr($address, 2));
 
     //$note = str_replace( "'", "''", $note );
     $note = mysqli_real_escape_string($db, $note);
@@ -817,7 +821,7 @@ function requestModifyGame($author, $gameID, $field, $value)
     settype($field, 'integer');
     switch ($field) {
         case 1: // Title
-            if (!isset($value) || strlen($value) < 2) {
+            if (!isset($value) || mb_strlen($value) < 2) {
                 log_email("bad data $author, $gameID, $field, $value");
                 return false;
             }
@@ -832,7 +836,7 @@ function requestModifyGame($author, $gameID, $field, $value)
 
             $dbResult = mysqli_query($db, $query);
 
-            return ($dbResult !== false);
+            return $dbResult !== false;
             break;
 
         /**
@@ -851,7 +855,7 @@ function requestModifyGame($author, $gameID, $field, $value)
             log_sql("$user: $query");
             $dbResult = s_mysql_query($query);
 
-            return ($dbResult !== false);
+            return $dbResult !== false;
             break;
     }
 
@@ -886,7 +890,7 @@ function recalcScore($user)
 //    15:12 20/10/2013
 function getConsoleIDs()
 {
-    $retVal = array();
+    $retVal = [];
 
     $query = "SELECT ID, Name FROM Console";
     $dbResult = s_mysql_query($query);
@@ -958,7 +962,7 @@ function recalculateDevelopmentContributions($user)
 
     $dbResult = s_mysql_query($query);
 
-    return ($dbResult != false);
+    return $dbResult != false;
 }
 
 //    14:49 14/12/2013
@@ -1096,7 +1100,7 @@ function getAchievementPatchReadableHTML($mem, $memNotes)
         'B' => 'Sub Source',
         'C' => 'Add Hits',
         'N' => 'And Next',
-        '' => ''
+        '' => '',
     ];
 
     $memSize = [
@@ -1114,7 +1118,7 @@ function getAchievementPatchReadableHTML($mem, $memNotes)
         '0xX' => '32-bit', // needs to be before the 16bits below to make the RegEx work
         '0x ' => '16-bit',
         '0x' => '16-bit',
-        '' => ''
+        '' => '',
     ];
 
     $memTypes = [
@@ -1122,13 +1126,15 @@ function getAchievementPatchReadableHTML($mem, $memNotes)
         'p' => 'Prior',
         'm' => 'Mem',
         'v' => 'Value',
-        '' => ''
+        '' => '',
     ];
 
     // kudos to user "stt" for showing that it's possible to parse MemAddr with regex
     $operandRegex = '(d|p)?(' . implode('|', array_keys($memSize)) . ')?([0-9a-f]*)';
-    $memRegex = '/(?:([' . implode('',
-            array_keys($specialFlags)) . ']):)?' . $operandRegex . '(<=|>=|<|>|=|!=)' . $operandRegex . '(?:[(.](\\d+)[).])?/';
+    $memRegex = '/(?:([' . implode(
+        '',
+        array_keys($specialFlags)
+    ) . ']):)?' . $operandRegex . '(<=|>=|<|>|=|!=)' . $operandRegex . '(?:[(.](\\d+)[).])?/';
     // memRegex is this monster:
     // (?:([RPABC]):)?(d)?(0xM|0xN|0xO|0xP|0xQ|0xR|0xS|0xT|0xL|0xU|0xH|0xX|0x |0x|)?([0-9a-f]*)(<=|>=|<|>|=|!=)(d)?(0xM|0xN|0xO|0xP|0xQ|0xR|0xS|0xT|0xL|0xU|0xH|0xX|0x |0x|)?([0-9a-f]*)(?:[(.](\d+)[).])?
     // I was about to add comments explaining this long RegEx, but realized that the best way
@@ -1212,4 +1218,3 @@ function getAchievementPatchReadableHTML($mem, $memNotes)
 
     return $res;
 }
-

@@ -99,8 +99,7 @@ function getGameMetadataByFlags(
     $sortBy = 0,
     $user2 = null,
     $flags = 0
-)
-{
+) {
     settype($gameID, 'integer');
     settype($sortBy, 'integer');
     settype($flags, 'integer');
@@ -295,7 +294,7 @@ function getGameAlternatives($gameID)
 
     $dbResult = s_mysql_query($query);
 
-    $results = array();
+    $results = [];
 
     if ($dbResult !== false) {
         while ($data = mysqli_fetch_assoc($dbResult)) {
@@ -311,7 +310,7 @@ function getGamesListWithNumAchievements($consoleID, &$dataOut, $sortBy)
     return getGamesListByDev(null, $consoleID, $dataOut, $sortBy, false);
 }
 
-function getGamesListByDev($dev = null, $consoleID, &$dataOut, $sortBy, $ticketsFlag = false)
+function getGamesListByDev($dev, $consoleID, &$dataOut, $sortBy, $ticketsFlag = false)
 {
     //    Specify 0 for $consoleID to fetch games for all consoles, or an ID for just that console
 
@@ -430,7 +429,7 @@ function getGamesListByDev($dev = null, $consoleID, &$dataOut, $sortBy, $tickets
 //    14:01 30/10/2014
 function getGamesListData($consoleID, $officialFlag = false)
 {
-    $retVal = array();
+    $retVal = [];
 
     $leftJoinAch = "";
     $whereClause = "";
@@ -470,7 +469,7 @@ function getGamesList($consoleID, &$dataOut)
 
 function getGamesListDataNamesOnly($consoleID, $officialFlag = false)
 {
-    $retval = array();
+    $retval = [];
 
     $data = getGamesListData($consoleID, $officialFlag);
 
@@ -523,7 +522,7 @@ function getGameIDFromMD5($md5)
 //    09:02 06/02/2015
 function getAchievementIDs($gameID)
 {
-    $retVal = array();
+    $retVal = [];
     settype($gameID, 'integer');
     $retVal['GameID'] = $gameID;
 
@@ -535,7 +534,7 @@ function getAchievementIDs($gameID)
 
     $dbResult = s_mysql_query($query);
     if ($dbResult !== false) {
-        $achIDs = array();
+        $achIDs = [];
         while ($data = mysqli_fetch_assoc($dbResult)) {
             settype($data['ID'], 'integer');
             $achIDs[] = $data['ID'];
@@ -628,15 +627,15 @@ function requestModifyGameData($gameID, $developerIn, $publisherIn, $genreIn, $r
         error_log(__FUNCTION__ . " OK! GameID: $gameID, text: $developer, $publisher, $genre, $released");
     }
 
-    return ($dbResult != null);
+    return $dbResult != null;
 }
 
 function requestModifyGameAlt($gameID, $toAdd = null, $toRemove = null)
 {
     if (isset($toAdd)) {
         //Replace all non-numberic characters with comma so the string has a common delimiter.
-        $toAdd = preg_replace("/[^0-9]+/", ",", $toAdd );
-        $tok = strtok ($toAdd, ",");
+        $toAdd = preg_replace("/[^0-9]+/", ",", $toAdd);
+        $tok = strtok($toAdd, ",");
         $valuesArray = [];
         while ($tok !== false && $tok > 0) {
             settype($tok, 'integer');
@@ -696,7 +695,7 @@ function requestModifyGameForumTopic($gameID, $newForumTopic)
 function getAchievementDistribution($gameID, $hardcore)
 {
     settype($hardcore, 'integer');
-    $retval = array();
+    $retval = [];
 
     //    Returns an array of the number of players who have achieved each total, up to the max.
     $query = "
@@ -733,7 +732,7 @@ function getMostPopularGames($offset, $count, $method)
 {
     settype($method, 'integer');
 
-    $retval = array();
+    $retval = [];
 
     if ($method == 0) {
         //    By num awards given:
@@ -793,7 +792,7 @@ function getGameListSearch($offset, $count, $method, $consoleID = null)
 {
     settype($method, 'integer');
 
-    $retval = array();
+    $retval = [];
 
     if ($method == 0) {
         $where = '';
@@ -846,7 +845,7 @@ function getTotalUniquePlayers($gameID)
 //    13:40 08/12/2013
 function getGameTopAchievers($gameID, $offset, $count, $requestedBy)
 {
-    $retval = Array();
+    $retval = [];
 
     $query = "    SELECT aw.User, SUM(ach.points) AS TotalScore, MAX(aw.Date) AS LastAward
                 FROM Awarded AS aw
@@ -875,7 +874,7 @@ function getGameTopAchievers($gameID, $offset, $count, $requestedBy)
 //////////////////////////////////////////////////////////////////////////////////////////
 function submitAlternativeGameTitle($user, $md5, $gameTitleDest, $consoleID, &$idOut)
 {
-    if (!isset($md5) || strlen($md5) != 32) {
+    if (!isset($md5) || mb_strlen($md5) != 32) {
         log_email("invalid md5 provided ($md5) by $user, $gameTitleDest");
         return false;
     }
@@ -971,7 +970,7 @@ function submitNewGameTitleJSON($user, $md5, $titleIn, $consoleID)
 
     error_log(__FUNCTION__ . " called with $user, $md5, $titleIn, $consoleID");
 
-    $retVal = array();
+    $retVal = [];
     $retVal['MD5'] = $md5;
     $retVal['ConsoleID'] = $consoleID;
     $retVal['GameID'] = 0;
@@ -984,11 +983,11 @@ function submitNewGameTitleJSON($user, $md5, $titleIn, $consoleID)
         error_log(__FUNCTION__ . " User unset? Ignoring");
         $retVal['Error'] = "User doesn't appear to be set or have permissions?";
         $retVal['Success'] = false;
-    } elseif (strlen($md5) != 32) {
+    } elseif (mb_strlen($md5) != 32) {
         error_log(__FUNCTION__ . " Md5 unready? Ignoring");
         $retVal['Error'] = "MD5 provided ($md5) doesn't appear to be exactly 32 characters, this request is invalid.";
         $retVal['Success'] = false;
-    } elseif (strlen($titleIn) < 2) {
+    } elseif (mb_strlen($titleIn) < 2) {
         error_log(__FUNCTION__ . " $user provided a new md5 $md5 for console $consoleID, but provided the title $titleIn. Ignoring");
         $retVal['Error'] = "Cannot submit game title given as '$titleIn'";
         $retVal['Success'] = false;
@@ -1062,7 +1061,7 @@ function submitGameTitle($user, $md5, $titleIn, $consoleID, &$idOut)
         return false;
     }
 
-    if (strlen($titleIn) < 2) {
+    if (mb_strlen($titleIn) < 2) {
         error_log(__FUNCTION__ . " $user provided a new md5 $md5 for console $consoleID, but provided the title $titleIn. Ignoring");
         return false;
     }
@@ -1161,7 +1160,7 @@ function recalculateTrueRatio($gameID)
     SQL_ASSERT($dbResult);
 
     if ($dbResult !== false) {
-        $achData = Array();
+        $achData = [];
         $totalEarners = 0;
         while ($nextData = mysqli_fetch_assoc($dbResult)) {
             $achData[$nextData['ID']] = $nextData;
@@ -1172,8 +1171,7 @@ function recalculateTrueRatio($gameID)
             //error_log( "Added " . $achData[ $nextData['ID'] ]['ID'] );
         }
 
-        if ($totalEarners == 0) // force all unachieved to be 1
-        {
+        if ($totalEarners == 0) { // force all unachieved to be 1
             $totalEarners = 1;
         }
 
@@ -1184,8 +1182,7 @@ function recalculateTrueRatio($gameID)
             $achPoints = $nextAch['Points'];
             $numAchieved = $nextAch['NumAchieved'];
 
-            if ($numAchieved == 0) // force all unachieved to be 1
-            {
+            if ($numAchieved == 0) { // force all unachieved to be 1
                 $numAchieved = 1;
             }
 
@@ -1218,7 +1215,7 @@ function recalculateTrueRatio($gameID)
 
 function getMD5List($consoleID)
 {
-    $retVal = array();
+    $retVal = [];
 
     settype($consoleID, 'integer');
 

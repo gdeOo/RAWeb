@@ -100,13 +100,22 @@ function GetAchievementData($id)
 
 function getAchievementsList($consoleIDInput, $user, $sortBy, $params, $count, $offset, &$dataOut, $achFlags = 3)
 {
-    return getAchievementsListByDev(null, $consoleIDInput, $user, $sortBy, $params, $count, $offset, $dataOut,
-        $achFlags);
+    return getAchievementsListByDev(
+        null,
+        $consoleIDInput,
+        $user,
+        $sortBy,
+        $params,
+        $count,
+        $offset,
+        $dataOut,
+        $achFlags
+    );
 }
 
 
 function getAchievementsListByDev(
-    $dev = null,
+    $dev,
     $consoleIDInput,
     $user,
     $sortBy,
@@ -247,7 +256,7 @@ function GetAchievementMetadataJSON($achID)
 function GetAchievementMetadata($achievementID, &$dataOut)
 {
     $dataOut = GetAchievementMetadataJSON($achievementID);
-    return (count($dataOut) > 0);
+    return count($dataOut) > 0;
 }
 
 //    00:59 23/02/2013
@@ -292,12 +301,12 @@ function InsertAwardedAchievementDB($user, $achIDToAward, $isHardcore)
 
     log_sql($query);
     $dbResult = s_mysql_query($query);
-    return ($dbResult !== false);    //    FALSE return value ALWAYS means error here.
+    return $dbResult !== false;    //    FALSE return value ALWAYS means error here.
 }
 
 function HasAward($user, $achIDToAward)
 {
-    $retVal = array();
+    $retVal = [];
     $retVal['HasRegular'] = false;
     $retVal['HasHardcore'] = false;
 
@@ -363,7 +372,7 @@ function AddEarnedAchievementJSON($user, $achIDToAward, $isHardcore, $validation
     settype($achIDToAward, 'integer');
     settype($isHardcore, 'integer');
 
-    $retVal = array();
+    $retVal = [];
     $retVal['Success'] = true;
 
     if (!ValidationPass($validationKey, $user, $achIDToAward)) {
@@ -372,7 +381,7 @@ function AddEarnedAchievementJSON($user, $achIDToAward, $isHardcore, $validation
     } elseif ($achIDToAward == 0) {
         $retVal['Success'] = false;
         $retVal['Error'] = "Achievement ID is 0! Cannot award.";
-    } elseif (!isset($user) || strlen($user) < 2) {
+    } elseif (!isset($user) || mb_strlen($user) < 2) {
         $retVal['Success'] = false;
         $retVal['Error'] = "User is '$user', cannot award achievement.";
     } else {
@@ -385,8 +394,7 @@ function AddEarnedAchievementJSON($user, $achIDToAward, $isHardcore, $validation
         } elseif ($userData == null) {
             $retVal['Success'] = false;
             $retVal['Error'] = "User data cannot be found for $user";
-        } elseif ($achData['Flags'] == 5) // do not award Unofficial achievements
-        {
+        } elseif ($achData['Flags'] == 5) { // do not award Unofficial achievements
             $retVal['Success'] = false;
             $retVal['Error'] = "Unofficial achievements aren't registered on the RetroAchievements.org database";
         } else {
@@ -466,7 +474,7 @@ function AddEarnedAchievementJSON($user, $achIDToAward, $isHardcore, $validation
 
                         testFullyCompletedGame($user, $achIDToAward, $isHardcore);
 
-                        $socialData = array();
+                        $socialData = [];
                         $socialData['User'] = $user;
                         $socialData['Points'] = $userData['RAPoints'] + $pointsToGive;
                         $socialData['AchievementData'] = $achData; //Passthru
@@ -634,7 +642,7 @@ function addEarnedAchievement(
                                 //$linkTo = "https://retroachievements.org/Users/$User.html";
                                 //$linkTo = getenv('APP_URL');
                                 //$linkTo = '';
-                                //$params = array(
+                                //$params = [
                                 //    'access_token'=>'490904194261313|WGR9vR4fulyLxEufSRH2CJrthHw',
                                 //    'url'=>getenv('APP_URL'),
                                 //    'image'=>getenv('APP_URL').'/Trophy1-96.png',
@@ -642,13 +650,14 @@ function addEarnedAchievement(
                                 //    'link'=>$linkTo,
                                 //    'caption'=>$title,
                                 //    'title'=>$title,
-                                //    'description'=>$desc );
+                                //    'description'=>$desc
+                                // ];
 
                                 $access_token = '490904194261313|ea6341e18635a588bab539281e798b97';
-                                $params = array(
+                                $params = [
                                     'access_token' => $access_token,
-                                    'achievement' => getenv('APP_URL') . "/Achievement/$achIDToAward"
-                                );
+                                    'achievement' => getenv('APP_URL') . "/Achievement/$achIDToAward",
+                                ];
 
                                 try {
                                     //$ret_obj = $fbConn->api( "/$fbUser/feed", 'POST', $params );
@@ -784,9 +793,7 @@ function UploadNewAchievement(
 
                     if (s_mysql_query($query) !== false) {
                         global $db;
-                        $rowsAffected = mysqli_affected_rows($db);
-                        //error_log( __FUNCTION__ . " removed $rowsAffected rows in Achieved" );
-                        //great
+                        mysqli_affected_rows($db); // error_log( __FUNCTION__ . " removed $rowsAffected rows in Achieved" );
                     } else {
                         //meh
                     }
@@ -938,7 +945,7 @@ function getRecentlyEarnedAchievements($count, $user, &$dataOut)
 
 function GetAchievementsPatch($gameID, $flags)
 {
-    $retVal = array();
+    $retVal = [];
 
     $flagsCond = "TRUE";
     if ($flags != 0) {
@@ -978,7 +985,7 @@ function GetPatchData($gameID, $flags, $user)
     settype($gameID, 'integer');
     settype($flags, 'integer');
 
-    $retVal = array();
+    $retVal = [];
 
     if ($gameID == 0) {
         error_log(__FUNCTION__ . " cannot lookup game with gameID $gameID for user $user");
@@ -1001,16 +1008,13 @@ function getPatch($gameID, $flags, $user, $andLeaderboards)
     getGameTitleFromID($gameID, $gameTitle, $consoleID, $consoleName, $forumTopicID, $gameData);
 
     $minVer = "0.001";
-    if ($consoleID == 1) //    Mega Drive
-    {
+    if ($consoleID == 1) { //    Mega Drive
         $minVer = "0.042";
     } //"0.028";
-    elseif ($consoleID == 2) //    N64
-    {
+    elseif ($consoleID == 2) { //    N64
         $minVer = "0.008";
     } //??
-    elseif ($consoleID == 3) //    SNES
-    {
+    elseif ($consoleID == 3) { //    SNES
         $minVer = "0.008";
     }
 
@@ -1113,7 +1117,7 @@ function updateAchievementDisplayID($achID, $newID)
     log_sql($query);
     $dbResult = s_mysql_query($query);
 
-    return ($dbResult !== false);
+    return $dbResult !== false;
 }
 
 function updateAchievementEmbedVideo($achID, $newURL)
@@ -1124,7 +1128,7 @@ function updateAchievementEmbedVideo($achID, $newURL)
     global $db;
     $dbResult = mysqli_query($db, $query);
 
-    return ($dbResult !== false);
+    return $dbResult !== false;
 }
 
 function updateAchievementFlags($achID, $newFlags)
@@ -1134,7 +1138,7 @@ function updateAchievementFlags($achID, $newFlags)
     global $db;
     $dbResult = mysqli_query($db, $query);
 
-    return ($dbResult !== false);
+    return $dbResult !== false;
 }
 
 function getCommonlyEarnedAchievements($consoleID, $offset, $count, &$dataOut)
@@ -1156,7 +1160,7 @@ function getCommonlyEarnedAchievements($consoleID, $offset, $count, &$dataOut)
 
     $dbResult = s_mysql_query($query);
     if ($dbResult !== false) {
-        $dataOut = array();
+        $dataOut = [];
         while ($db_entry = mysqli_fetch_assoc($dbResult)) {
             $dataOut[] = $db_entry;
         }

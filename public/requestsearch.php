@@ -3,23 +3,21 @@ require_once __DIR__ . '/../lib/bootstrap.php';
 
 //error_log( __FILE__ );
 
-if( !isset( $_REQUEST[ 'term' ] ) )
+if (!isset($_REQUEST['term'])) {
     exit;
+}
 
 global $db;
-$searchTerm = mysqli_real_escape_string( $db, $_REQUEST[ 'term' ] );
+$searchTerm = mysqli_real_escape_string($db, $_REQUEST['term']);
 
-$source = seekGET( 'p', "" );
-if( $source == 'gamecompare' || $source == 'user' )
-{
+$source = seekGET('p', "");
+if ($source == 'gamecompare' || $source == 'user') {
     //	User only
     $query = "SELECT '3' AS Type, ua.User AS ID, ua.User AS Title FROM UserAccounts AS ua
 				  WHERE ua.User LIKE '%$searchTerm%'
 				  ORDER BY ua.User
 				  LIMIT 0, 10 ";
-}
-else if( $source == 'game' )
-{
+} elseif ($source == 'game') {
     //	Game only
     $query = "SELECT '1' AS Type, gd.ID, CONCAT( gd.Title, \" (\", c.Name, \")\" ) AS Title, gd.ImageIcon AS Icon
 					FROM GameData AS gd
@@ -29,9 +27,7 @@ else if( $source == 'game' )
 					GROUP BY ach.GameID
 					ORDER BY gd.Title
 					LIMIT 0, 10";
-}
-else if( $source == 'achievement' )
-{
+} elseif ($source == 'achievement') {
     //	Ach only
     $query = "SELECT '2' AS Type, ach.ID, ach.Title, gd.ImageIcon AS Icon
 				  FROM Achievements AS ach
@@ -39,9 +35,7 @@ else if( $source == 'achievement' )
 				  WHERE ach.Flags = 3 AND ach.Title LIKE '%$searchTerm%'
 				  ORDER BY ach.Title
 				  LIMIT 0, 10";
-}
-else
-{
+} else {
     $query = "(
 		SELECT '1' AS Type, gd.ID, CONCAT( gd.Title, \" (\", c.Name, \")\" ) AS Title, gd.ImageIcon AS Icon
 		FROM GameData AS gd
@@ -71,51 +65,43 @@ else
 		) ";
 }
 
-$dbResult = s_mysql_query( $query );
+$dbResult = s_mysql_query($query);
 
-$dataOut = array();
+$dataOut = [];
 
-if( $dbResult !== FALSE && mysqli_num_rows( $dbResult ) > 0 )
-{
-    while( $nextRow = mysqli_fetch_array( $dbResult ) )
-    {
-        $nextTitle = $nextRow[ 'Title' ];
-        $nextID = $nextRow[ 'ID' ];
-        $nextIcon = $nextRow[ 'Icon' ];
+if ($dbResult !== false && mysqli_num_rows($dbResult) > 0) {
+    while ($nextRow = mysqli_fetch_array($dbResult)) {
+        $nextTitle = $nextRow['Title'];
+        $nextID = $nextRow['ID'];
+        $nextIcon = $nextRow['Icon'];
 
-        if( $nextRow[ 'Type' ] == 1 )
-        {
-            $dataOut[] = array(
+        if ($nextRow['Type'] == 1) {
+            $dataOut[] = [
                 'label' => $nextTitle,
                 'id' => $nextID,
                 'icon' => $nextIcon,
                 'mylink' => "/Game/$nextID",
-                'category' => "Games"
-            );
-        }
-        else if( $nextRow[ 'Type' ] == 2 )
-        {
-            $dataOut[] = array(
+                'category' => "Games",
+            ];
+        } elseif ($nextRow['Type'] == 2) {
+            $dataOut[] = [
                 'label' => $nextTitle,
                 'id' => $nextID,
                 'icon' => $nextIcon,
                 'mylink' => "/Achievement/$nextID",
-                'category' => "Achievements"
-            );
-        }
-        else //	$nextRow['Type'] == 3
-        {
-            $dataOut[] = array(
+                'category' => "Achievements",
+            ];
+        } else { //	$nextRow['Type'] == 3
+            $dataOut[] = [
                 'label' => $nextTitle,
                 'id' => $nextID,
                 'icon' => $nextIcon,
                 'mylink' => "/User/$nextID",
-                'category' => "Users"
-            );
+                'category' => "Users",
+            ];
         }
     }
 }
 
-echo json_encode( $dataOut );
+echo json_encode($dataOut);
 flush();
-?>

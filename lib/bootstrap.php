@@ -16,8 +16,10 @@ $g_numQueries = 0;
 if (isset($_SERVER["SERVER_NAME"])) {
     define("AT_HOST", ($_SERVER["SERVER_NAME"]));
     //	Note: null domain should be used for localhost stuff (Chrome workaround)
-    define("AT_HOST_DOT",
-        (stristr($_SERVER["SERVER_NAME"], "retroachievements.org")) ? '.retroachievements.org' : null);
+    define(
+        "AT_HOST_DOT",
+        (mb_stristr($_SERVER["SERVER_NAME"], "retroachievements.org")) ? '.retroachievements.org' : null
+    );
 } else {
     define("AT_HOST", "Internal");
     define("AT_HOST_DOT", null);
@@ -35,8 +37,13 @@ function isAtHome()
 }
 
 try {
-    $db = mysqli_connect(getenv('DB_HOST'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'), getenv('DB_DATABASE'),
-        getenv('DB_PORT'));
+    $db = mysqli_connect(
+        getenv('DB_HOST'),
+        getenv('DB_USERNAME'),
+        getenv('DB_PASSWORD'),
+        getenv('DB_DATABASE'),
+        getenv('DB_PORT')
+    );
     mysqli_set_charset($db, 'latin1');
     mysqli_query($db, "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
 } catch (Exception $exception) {

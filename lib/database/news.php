@@ -1,12 +1,12 @@
 <?php
 require_once(__DIR__ . '/../bootstrap.php');
 //////////////////////////////////////////////////////////////////////////////////////////
-//    News 
+//    News
 //////////////////////////////////////////////////////////////////////////////////////////
 //    18:25 16/10/2014
 function GetLatestNewsData($offset, $count)
 {
-    $retVal = array();
+    $retVal = [];
 
     $query = "SELECT ID, UNIX_TIMESTAMP(Timestamp) AS TimePosted, Title, Payload, Author, Link, Image
               FROM News

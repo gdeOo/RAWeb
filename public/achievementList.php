@@ -169,8 +169,15 @@ RenderDocType();
                 }
 
                 echo "<td style='min-width:25%'>";
-                echo GetAchievementAndTooltipDiv($achID, $achTitle, $achDesc, $achPoints, $gameTitle, $achBadgeName,
-                    true);
+                echo GetAchievementAndTooltipDiv(
+                    $achID,
+                    $achTitle,
+                    $achDesc,
+                    $achPoints,
+                    $gameTitle,
+                    $achBadgeName,
+                    true
+                );
                 echo "</td>";
 
                 //echo "<td style='min-width:25%'>";
@@ -185,7 +192,7 @@ RenderDocType();
                     echo "</td>";
 
                     echo "<td>";
-                    echo GetUserAndTooltipDiv( $achAuthor, TRUE );
+                    echo GetUserAndTooltipDiv($achAuthor, true);
                     echo "</td>";
                 }
 

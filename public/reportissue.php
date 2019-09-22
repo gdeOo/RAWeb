@@ -1,39 +1,38 @@
 <?php
 require_once __DIR__ . '/../lib/bootstrap.php';
 
-RA_ReadCookieCredentials( $user, $points, $truePoints, $unreadMessageCount, $permissions );
-$cookieRaw = RA_ReadCookie( 'RA_Cookie' );
+RA_ReadCookieCredentials($user, $points, $truePoints, $unreadMessageCount, $permissions);
+$cookieRaw = RA_ReadCookie('RA_Cookie');
 
-$achievementID  = seekGET( 'i', 0 );
-settype( $achievementID, 'integer' );
+$achievementID = seekGET('i', 0);
+settype($achievementID, 'integer');
 
-if( $achievementID == 0 ||
-        getAchievementMetadata( $achievementID, $dataOut ) == false )
-{
-    header( "Location: " . getenv('APP_URL') . "?e=unknownachievement" );
+if ($achievementID == 0 ||
+    getAchievementMetadata($achievementID, $dataOut) == false) {
+    header("Location: " . getenv('APP_URL') . "?e=unknownachievement");
     exit;
 }
 
-$achievementTitle = $dataOut[ 'AchievementTitle' ];
-$desc = $dataOut[ 'Description' ];
-$gameTitle = $dataOut[ 'GameTitle' ];
-$achPoints = $dataOut[ 'Points' ];
-$achBadgeName = $dataOut[ 'BadgeName' ];
-$consoleID = $dataOut[ 'ConsoleID' ];
-$consoleName = $dataOut[ 'ConsoleName' ];
-$gameID = $dataOut[ 'GameID' ];
-$gameBadge = $dataOut[ 'GameIcon' ];
+$achievementTitle = $dataOut['AchievementTitle'];
+$desc = $dataOut['Description'];
+$gameTitle = $dataOut['GameTitle'];
+$achPoints = $dataOut['Points'];
+$achBadgeName = $dataOut['BadgeName'];
+$consoleID = $dataOut['ConsoleID'];
+$consoleName = $dataOut['ConsoleName'];
+$gameID = $dataOut['GameID'];
+$gameBadge = $dataOut['GameIcon'];
 
-$errorCode = seekGET( 'e' );
+$errorCode = seekGET('e');
 
 $pageTitle = "Report Broken Achievement";
 
-RenderDocType( TRUE );
+RenderDocType(true);
 ?>
 
 <head prefix="og: http://ogp.me/ns# retroachievements: http://ogp.me/ns/apps/retroachievements#">
-    <?php RenderSharedHeader( $user ); ?>
-    <?php RenderTitleTag( $pageTitle, $user ); ?>
+    <?php RenderSharedHeader($user); ?>
+    <?php RenderTitleTag($pageTitle, $user); ?>
     <?php RenderGoogleTracking(); ?>
 </head>
 
@@ -76,8 +75,15 @@ RenderDocType( TRUE );
                 <tr>
                     <td>Achievement:</td>
                     <td>
-                        <?php echo GetAchievementAndTooltipDiv($achievementID, $achievementTitle, $desc, $achPoints,
-                            $gameTitle, $achBadgeName, true) ?>
+                        <?php echo GetAchievementAndTooltipDiv(
+    $achievementID,
+    $achievementTitle,
+    $desc,
+    $achPoints,
+    $gameTitle,
+    $achBadgeName,
+    true
+) ?>
                     </td>
                 </tr>
                 <tr class="alt">
@@ -117,9 +123,11 @@ RenderDocType( TRUE );
                         <select name="note[checksum]" id="checksum" required>
                             <option value="Unknown">I don't know.</option>
                             <?php
-                            foreach( getHashListByGameID( $gameID ) as $listKey => $hashArray )
-                                foreach( $hashArray as $hashKey => $hash )
+                            foreach (getHashListByGameID($gameID) as $listKey => $hashArray) {
+                                foreach ($hashArray as $hashKey => $hash) {
                                     echo "<option value='$hash'>$hash</option>";
+                                }
+                            }
                             ?>
                         </select>
                     </td>

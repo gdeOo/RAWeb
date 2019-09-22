@@ -11,7 +11,7 @@ function SubmitLeaderboardEntryJSON($user, $lbID, $newEntry, $validation)
 {
     global $db;
 
-    $retVal = array();
+    $retVal = [];
     $retVal['Success'] = true;
 
     //    Fetch some always-needed data
@@ -40,7 +40,7 @@ function SubmitLeaderboardEntryJSON($user, $lbID, $newEntry, $validation)
         settype($retVal['Score'], 'integer');
         $retVal['ScoreFormatted'] = $scoreFormatted;
 
-        $scoreData = Array();
+        $scoreData = [];
         $scoreData['Score'] = $newEntry;
         settype($scoreData['Score'], 'integer');
         $scoreData['GameID'] = $gameID;
@@ -99,8 +99,7 @@ function SubmitLeaderboardEntryJSON($user, $lbID, $newEntry, $validation)
                 //    (New) Entry added!
                 $retVal['BestScore'] = $newEntry;
                 postActivity($user, ActivityType::NewLeaderboardEntry, $scoreData);
-            } else //if( $numRowsAffected == 2 )
-            {
+            } else { //if( $numRowsAffected == 2 )
                 //    Improved Entry added!
                 $retVal['BestScore'] = $newEntry;
                 postActivity($user, ActivityType::ImprovedLeaderboardEntry, $scoreData);
@@ -139,7 +138,7 @@ function submitLeaderboardEntry($user, $lbID, $newEntry, $validation, &$dataOut)
     $lbID = $data['ID'];
     $scoreFormatted = GetFormattedLeaderboardEntry($data['Format'], $newEntry);
 
-    $scoreData = Array();
+    $scoreData = [];
     $scoreData['Score'] = $newEntry;
     $scoreData['GameID'] = $gameID;
     $scoreData['ScoreFormatted'] = $scoreFormatted;
@@ -261,7 +260,7 @@ function RemoveLeaderboardEntry($user, $lbID)
 //    08:52 05/11/2014
 function GetLeaderboardRankingJSON($user, $lbID)
 {
-    $retVal = array();
+    $retVal = [];
 
     $query = "SELECT COUNT(*) AS UserRank,
                 (SELECT ld.LowerIsBetter FROM LeaderboardDef AS ld WHERE ld.ID=$lbID) AS LowerIsBetter,
@@ -363,7 +362,7 @@ function getLeaderboardsForGame($gameID, &$dataOut, $localUser)
 //    15:21 16/10/2014
 function GetLeaderboardEntriesDataJSON($lbID, $user, $numToFetch, $offset, $friendsOnly)
 {
-    $retVal = array();
+    $retVal = [];
 
     //    'Me or my friends'
     $friendQuery = $friendsOnly ? "( ( ua.User IN ( SELECT Friend FROM Friends WHERE User='$user' ) ) OR ua.User='$user' )" : "TRUE";
@@ -395,7 +394,7 @@ function GetLeaderboardEntriesDataJSON($lbID, $user, $numToFetch, $offset, $frie
 //    15:21 16/10/2014
 function GetLeaderboardData($lbID, $user, $numToFetch, $offset, $friendsOnly)
 {
-    $retVal = array();
+    $retVal = [];
 
     //    Get raw LB data
     $query = "SELECT ld.ID AS LBID, gd.ID AS GameID, gd.Title AS GameTitle, ld.LowerIsBetter, ld.Title AS LBTitle, ld.Description AS LBDesc, ld.Format AS LBFormat, ld.Mem AS LBMem, gd.ConsoleID, c.Name AS ConsoleName, gd.ForumTopicID, gd.ImageIcon AS GameIcon
@@ -413,7 +412,7 @@ function GetLeaderboardData($lbID, $user, $numToFetch, $offset, $friendsOnly)
         settype($retVal['ConsoleID'], 'integer');
         settype($retVal['ForumTopicID'], 'integer');
 
-        $retVal['Entries'] = array();
+        $retVal['Entries'] = [];
 
         //    Now get entries:
         $query = "SELECT ua.User, le.Score, le.DateSubmitted
@@ -431,7 +430,7 @@ function GetLeaderboardData($lbID, $user, $numToFetch, $offset, $friendsOnly)
             $numResultsFound = 0;
             $userFound = false;
 
-            $entries = array();
+            $entries = [];
 
             while ($db_entry = mysqli_fetch_assoc($dbResult)) {
                 $db_entry['Rank'] = $numResultsFound + $offset + 1;
@@ -708,7 +707,7 @@ function requestResetLB($lbID)
               WHERE LeaderboardID = $lbID";
     $dbResult = s_mysql_query($query);
 
-    return ($dbResult !== false);
+    return $dbResult !== false;
 }
 
 //    19:21 28/12/2013
@@ -720,16 +719,16 @@ function requestDeleteLB($lbID)
     $query = "DELETE FROM LeaderboardDef WHERE ID = $lbID";
 
     $dbResult = s_mysql_query($query);
-    if($dbResult !== false) {
+    if ($dbResult !== false) {
         s_mysql_query("INSERT INTO DeletedModels SET ModelType='LeaderboardDef', ModelID=$lbID");
     }
-    return ($dbResult !== false);
+    return $dbResult !== false;
 }
 
 //    11:52 31/10/2014
 function GetLBPatch($gameID)
 {
-    $lbData = array();
+    $lbData = [];
 
     //    Always append LBs?
     $query = "SELECT ld.ID, ld.Mem, ld.Format, ld.Title, ld.Description
